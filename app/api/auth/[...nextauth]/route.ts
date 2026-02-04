@@ -1,6 +1,8 @@
 // app/api/auth/[...nextauth]/route.ts
+import { prisma } from "@/lib/prisma";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
 
 const handler = NextAuth({
   providers: [
@@ -11,13 +13,23 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Burada normalde veritabanına gidip kullanıcıyı kontrol edersin.
-        // Test için dummy bir kullanıcı dönelim:
-        if (
-          credentials?.email === "admin@example.com" &&
-          credentials?.password === "123456"
-        ) {
-          return { id: "1", name: "Admin User", email: "admin@example.com" };
+        if (!credentials?.email || !credentials?.password) return null;
+
+        // Veritabanında kullanıcıyı bul
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user) return null;
+
+        // Şifreyi kontrol et
+        const isPasswordCorrect = await bcrypt.compare(
+          credentials.password,
+          user.password,
+        );
+
+        if (isPasswordCorrect) {
+          return { id: user.id.toString(), name: user.name, email: user.email };
         }
         return null;
       },
