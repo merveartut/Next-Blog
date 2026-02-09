@@ -1,0 +1,25 @@
+{
+  "write": "Write",
+  "articles": "Articles",
+  "about": "About",
+  "heroText": "Curated Thoughts on Code, Life, and Everything in Between.",
+  "myProfile": "My Profile",
+  "logout": "Logout",
+  "login": "Login",
+  "account": "Account",
+  "most": "Most",
+  "loved": "Loved",
+  "turnBack": "Back",
+  "addNewHashtag": "Add new and press Enter...",
+  "categories": "Categories",
+  "addTitle": "Add a title to your post...",
+  "addTable": "Add Field",
+  "addImage": "Add Image",
+  "throwPaper": "Tear Paper",
+  "About": {
+    "title": "What is Be Log?",
+    "content": "If you’re tired of living in an age where even blog sites feel like ancient nostalgia, you’re not alone. Welcome. This is a breath of air in the middle of the digital noise, where everything is squeezed into 15-second clips and attention is the cheapest currency. This place was built as a sanctuary for those who are fed up with algorithms deciding what we read, what we like, and how long we focus.",
+    "p2": "The purpose of this site is simple: to put thoughts into words without rushing in an age where speed often kills depth. You won’t just find lines of code or design trends here; you’ll find the messiness of life, the jargon of technology, and everything that gets caught between the gears of the massive machine we call 'modernity'. We don't just embrace nostalgia because we love the past, but because the pace of today is often overwhelming.",
+    "footer": "If you believe that content is not meant to be 'consumed' but to be contemplated, you’re in the right place. The page is open, the mind is clear."
+  }
+}

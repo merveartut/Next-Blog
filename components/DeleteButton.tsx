@@ -1,7 +1,7 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
-import { deletePost } from "../app/blog/actions";
+import { deletePost } from "../app/[locale]/blog/actions";
 import { useState } from "react";
 
 export default function DeleteButton({ postId }: { postId: string }) {
@@ -20,7 +20,7 @@ export default function DeleteButton({ postId }: { postId: string }) {
     <button
       onClick={handleDelete}
       disabled={isDeleting}
-      className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all disabled:opacity-50"
+      className="p-2 text-slate-500 cursor-pointer hover:text-red-500 hover:bg-red-50 rounded-lg transition-all disabled:opacity-50"
       title="Yazıyı Sil"
     >
       <Trash2 size={18} />

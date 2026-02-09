@@ -23,13 +23,24 @@ export default async function ProfilePage() {
   });
 
   const getFirstImage = (html: string) => {
-    // Hem tek hem çift tırnağı destekleyen, daha esnek bir regex
-    const match = html.match(/<img[^>]+src=["']([^"']+)["']/);
-    return match ? match[1] : null;
+    if (!html) return null;
+
+    // 1. Önce ters eğik çizgileri ve tırnakları normalize edelim
+    const cleanHtml = html.split('\\"').join('"');
+
+    // 2. Çok daha esnek bir Regex
+    const match = cleanHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
+
+    if (!match) return null;
+
+    let src = match[1];
+
+    // 3. Baştaki ve sondaki kaçış kalıntılarını temizle
+    return src.replace(/^[\\"]+|[\\"]+$/g, "").trim();
   };
 
   return (
-    <main className="min-h-screen bg-amber-50 py-12 px-6">
+    <main className="min-h-[calc(100vh-90px)] bg-amber-50 py-12 px-6">
       <div className="max-w-4xl mx-auto">
         <header className="flex items-center gap-6 mb-12 bg-transparent border border-amber-950/40 p-8 rounded-3xl shadow-sm">
           <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl text-white font-black">
@@ -91,17 +102,13 @@ export default async function ProfilePage() {
                 </Link>
                 <Link
                   href={`/blog/${post.slug}/editor`} // Yazının ID'si ile editöre gidiyoruz
-                  className="p-2 text-slate-300 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                  className="p-2 text-slate-500 hover:text-blue-600 rounded-lg transition-all"
                   title="Yazıyı Düzenle"
                 >
                   <PenSquare size={18} />
                 </Link>
                 {/* SİLME BUTONU */}
                 <DeleteButton postId={post.id} />
-
-                <span className="text-slate-500 group-hover:text-blue-600 mr-2">
-                  →
-                </span>
               </div>
             );
           })}

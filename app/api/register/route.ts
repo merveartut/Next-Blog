@@ -6,10 +6,21 @@ export async function POST(req: Request) {
   try {
     const { name, email, password } = await req.json();
 
-    // Şifreyi şifrele (Güvenlik için şart!)
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      return NextResponse.json(
+        {
+          error:
+            "Şifre en az 8 karakter olmalı, büyük harf, küçük harf ve rakam içermelidir.",
+        },
+        { status: 400 },
+      );
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name,
         email,
@@ -21,10 +32,20 @@ export async function POST(req: Request) {
       { message: "User created successfully" },
       { status: 201 },
     );
-  } catch (error) {
+  } catch (error: any) {
+    console.error("Kayıt Hatası Detayı:", error); // Terminalde hatayı görmek için şart!
+
+    // Eğer Prisma email çakışması diyorsa (P2002 kodu)
+    if (error.code === "P2002") {
+      return NextResponse.json(
+        { error: "Bu e-posta adresi zaten kullanımda." },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json(
-      { error: "User already exists or database error" },
-      { status: 400 },
+      { error: "Kayıt sırasında teknik bir hata oluştu." },
+      { status: 500 },
     );
   }
 }

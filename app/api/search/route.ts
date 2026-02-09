@@ -15,7 +15,14 @@ export async function GET(request: Request) {
       ],
     },
     take: 5, // Sadece en alakalı 5 sonucu getir
-    select: { title: true, slug: true, categories: true, id: true },
+    select: {
+      title: true,
+      slug: true,
+      categories: true,
+      id: true,
+      createdAt: true,
+      author: true,
+    },
   });
 
   return NextResponse.json(posts);

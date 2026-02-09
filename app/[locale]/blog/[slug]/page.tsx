@@ -3,6 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import BlogContent from "./BlogContent";
+import FavoriteButton from "@/components/FavoriteButton";
+import { getServerSession } from "next-auth";
+import { PenSquare } from "lucide-react";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -11,22 +14,34 @@ interface PageProps {
 export default async function BlogDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
+  const session = await getServerSession();
+
   const post = await prisma.post.findUnique({
     where: { slug: slug },
+    include: {
+      // Sadece giriş yapmış kullanıcı bu postu favorilemiş mi diye bakıyoruz
+      favoritedBy: session?.user?.email
+        ? {
+            where: { email: session.user.email },
+            select: { email: true },
+          }
+        : false,
+    },
   });
 
   if (!post) notFound();
+  const isInitiallyFavorited = post.favoritedBy && post.favoritedBy.length > 0;
 
   return (
-    <main className="min-h-screen bg-amber-50/30 pb-20">
+    <main className="min-h-[calc(100vh-90px)] bg-[#f5f3ea] pb-20">
       {/* Header: Mobilde daha az padding */}
       <header className="pt-10 md:pt-16 pb-8 md:pb-12 px-4 md:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Top Navigation: Mobilde alt alta, masaüstünde yan yana */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8 md:mb-12">
+          <div className="flex flex-row justify-between items-center gap-6 mb-8 md:mb-12">
             <Link
               href="/"
-              className="no-underline text-xs md:text-sm font-bold text-blue-600 hover:text-indigo-600 transition-colors flex items-center gap-2"
+              className="no-underline w-full justify-start text-xs md:text-sm font-bold text-[#f92743] hover:text-[#f92743] transition-colors flex items-center gap-2"
             >
               <span className="text-lg md:text-xl">←</span> Tüm Yazılar
             </Link>
@@ -37,7 +52,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
                 <span
                   key={cat}
                   className={`px-2 md:px-3 py-1 rounded-md text-[10px] md:text-xs font-bold text-white shadow-sm
-                    ${["bg-indigo-400", "bg-emerald-500", "bg-rose-400", "bg-amber-500", "bg-blue-500"][i % 5]}`}
+                    ${["bg-indigo-400", "bg-emerald-500", "bg-rose-400", "bg-amber-500", "bg-[#f92743]"][i % 5]}`}
                 >
                   {cat}
                 </span>
@@ -67,26 +82,28 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
             {/* Yazar ve Tarih: Mobilde dikey, SM ekranlarda yatay */}
             <div className="flex flex-col w-full max-w-5xl justify-center sm:flex-row items-center gap-4 border-t border-slate-200 border-b py-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold border-2 border-white shadow-sm">
-                  {post.author?.charAt(0) || "M"}
+              <div className="flex items-center gap-4">
+                <div className="flex gap-2 items-center">
+                  <div className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-white text-slate-500 flex items-center justify-center text-xs font-bold border-2 border-slate-500 shadow-sm">
+                    {post.author?.charAt(0) || "M"}
+                  </div>
+                  <div className="text-start sm:text-center">
+                    <p className="text-base font-normal text-slate-500">
+                      {post.author}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-start sm:text-center">
-                  <p className="text-sm font-bold text-slate-900">
-                    {post.author}
-                  </p>
-                  {/* Mobilde tarih yazarın altına gelsin (Opsiyonel) */}
-                  <span className="sm:hidden text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    {new Intl.DateTimeFormat("tr-TR").format(
-                      new Date(post.createdAt),
-                    )}
-                  </span>
-                </div>
+
+                <div className="hidden sm:block w-1.5 h-1.5 bg-slate-500 rounded-full"></div>
+
+                <span className="sm:hidden text-[12px] font-normal text-slate-500 uppercase tracking-widest">
+                  {new Intl.DateTimeFormat("tr-TR").format(
+                    new Date(post.createdAt),
+                  )}
+                </span>
               </div>
 
-              <div className="hidden sm:block w-1.5 h-1.5 bg-slate-200 rounded-full"></div>
-
-              <div className="hidden sm:block text-[11px] font-bold uppercase tracking-widest text-slate-400">
+              <div className="hidden sm:block text-[12px] font-normal uppercase tracking-widest text-slate-500">
                 <time>
                   {new Intl.DateTimeFormat("tr-TR", {
                     day: "2-digit",
@@ -94,6 +111,24 @@ export default async function BlogDetailPage({ params }: PageProps) {
                     year: "numeric",
                   }).format(new Date(post.createdAt))}
                 </time>
+              </div>
+              <div className="flex flex-row gap-4 items-center">
+                <FavoriteButton
+                  slug={post.slug}
+                  initialCount={post.favoriteCount}
+                  isCompact={false}
+                  isInitiallyFavorited={isInitiallyFavorited}
+                />
+
+                {session?.user?.name === post.author && (
+                  <Link
+                    href={`/blog/${post.slug}/editor`} // Yazının ID'si ile editöre gidiyoruz
+                    className="p-2 text-slate-500 hover:text-blue-600 rounded-lg transition-all"
+                    title="Yazıyı Düzenle"
+                  >
+                    <PenSquare size={18} />
+                  </Link>
+                )}
               </div>
             </div>
           </div>
