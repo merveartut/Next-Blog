@@ -49,23 +49,25 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
+  // params'ı Promise içine alarak güncelliyoruz
+  params: Promise<{ locale: string }>;
 }>) {
+  // params'ı await ile bekletip içindeki locale'i alıyoruz
   const { locale } = await params;
 
   if (!["tr", "en"].includes(locale)) {
     notFound();
   }
-  console.log("LAYOUT LOCALE:", locale);
 
   // Çeviri dosyalarını sunucudan alıyoruz
   const messages = await getMessages({ locale });
+
   return (
     <html
       lang={locale}
       className={`${jakarta.variable} ${instrument.variable} ${mono.variable}`}
     >
-      <body className="font-sans antialiased text-slate-900 bg-[#f5f3ea]">
+      <body className="font-sans antialiased text-slate-900 bg-[#f5f3ea] overflow-x-hidden">
         <AuthProvider>
           <LoadingProvider>
             <NextIntlClientProvider messages={messages} locale={locale}>
