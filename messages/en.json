@@ -21,5 +21,21 @@
     "content": "If you’re tired of living in an age where even blog sites feel like ancient nostalgia, you’re not alone. Welcome. This is a breath of air in the middle of the digital noise, where everything is squeezed into 15-second clips and attention is the cheapest currency. This place was built as a sanctuary for those who are fed up with algorithms deciding what we read, what we like, and how long we focus.",
     "p2": "The purpose of this site is simple: to put thoughts into words without rushing in an age where speed often kills depth. You won’t just find lines of code or design trends here; you’ll find the messiness of life, the jargon of technology, and everything that gets caught between the gears of the massive machine we call 'modernity'. We don't just embrace nostalgia because we love the past, but because the pace of today is often overwhelming.",
     "footer": "If you believe that content is not meant to be 'consumed' but to be contemplated, you’re in the right place. The page is open, the mind is clear."
-  }
+  },
+  "joinNow": "Join Now",
+  "joinUs": "Join Us",
+  "createYourAccount": "Create your account to start writing.",
+  "registirationCompleted": "Registration completed successfully! You can now log in.",
+  "passwordRules": "Min. 8 chars, 1 uppercase, 1 lowercase & 1 number",
+  "alreadyHaveAccount": "Already have an account?",
+  "welcomeAboard": "Welcome aboard !",
+  "fullName": "Full Name",
+  "email": "Email",
+  "password": "Password",
+  "retypePassword": "Retype Password",
+  "welcomeBack": "Welcome back !",
+  "pleaseEnterYourDetails": "Please enter your details to log in.",
+  "signingIn": "Signing in...",
+  "don'tHaveAccount": "Don't have an account? ",
+  "joinTheClub": "Join the club"
 }

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -12,6 +13,8 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  const t = useTranslations();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,10 +40,11 @@ export default function LoginPage() {
     <main className="min-h-[calc(100vh-6rem)] bg-amber-50 flex items-center justify-center px-6">
       <div className="w-full max-w-125 bg-white p-10 rounded-3xl shadow-xl border border-slate-100">
         <h1 className="text-3xl font-black text-slate-900 mb-2">
-          Welcome Back<span className="text-blue-600">.</span>
+          {t("welcomeBack")}
+          <span className="text-blue-600">.</span>
         </h1>
         <p className="text-slate-500 mb-8 text-sm">
-          Please enter your details to sign in.
+          {t("pleaseEnterYourDetails")}
         </p>
 
         {error && (
@@ -52,7 +56,7 @@ export default function LoginPage() {
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label className="block text-xs font-bold uppercase text-slate-400 mb-2">
-              Email
+              {t("email")}
             </label>
             <input
               required
@@ -65,7 +69,7 @@ export default function LoginPage() {
           </div>
           <div>
             <label className="block text-xs font-bold uppercase text-slate-400 mb-2">
-              Password
+              {t("password")}
             </label>
             <input
               required
@@ -83,22 +87,22 @@ export default function LoginPage() {
             {isLoading ? (
               <>
                 <Loader2 size={20} className="animate-spin" />
-                <span>Signing in...</span>
+                <span>{t("signingIn")}</span>
               </>
             ) : (
-              "Sign In"
+              t("login")
             )}
           </button>
         </form>
         {/* Register Yönlendirmesi */}
         <div className="mt-8 pt-6 border-t border-slate-100 text-center">
           <p className="text-sm text-slate-500">
-            Don't have an account yet?{" "}
+            {t("dontHaveAccount")}
             <Link
               href="/register"
               className="text-[#f92743] font-bold hover:underline underline-offset-4"
             >
-              Join the club
+              {t("joinTheClub")}
             </Link>
           </p>
         </div>

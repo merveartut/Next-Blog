@@ -24,3 +24,18 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Safari ve iOS tarayıcıları için placeholder opaklığını sabitleme */
+input::placeholder,
+textarea::placeholder {
+  /* Safari varsayılan olarak opacity: 0.4 civarı bir değer verir */
+  opacity: 1 !important;
+  /* Kendi belirlediğin bir renk varsa buraya ekleyebilirsin */
+  color: #94a3b8; /* Tailwind slate-400 gibi bir ton */
+}
+
+/* Firefox için de önlem alalım (onlar da bazen opaklığı kısar) */
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  opacity: 1 !important;
+}

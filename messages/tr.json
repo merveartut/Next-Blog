@@ -21,5 +21,21 @@
     "content": "Blog sitelerinin bile nostalji kaldığı bir çağda yaşamaktan darlandıysanız yalnız değilsiniz. Hoş geldiniz. Burası, her şeyin 15 saniyelik videolara sığdırılmaya çalışıldığı ve dikkatin en ucuz para birimi olduğu o dijital gürültünün ortasında bir nefes boşluğu. Algoritmaların ne okuyacağımıza, neyi beğeneceğimize ve ne kadar süre odaklanacağımıza karar vermesinden yorulanlar için kurulmuş bir durak.",
     "p2": "Bu sitenin varlık sebebi; hızın derinliği öldürdüğü bu dönemde, düşünceleri acele etmeden yazıya dökmek. Burada sadece kod satırları veya tasarım trendleri yok; yaşamın karmaşası, teknolojinin jargonu ve 'modern' dediğimiz o devasa makinenin dişlileri arasında kalan her şey var. Nostaljiye sadece geçmişi sevdiğimiz için değil, bugünün hızıyla baş edemediğimiz için sığınıyoruz.",
     "footer": "İçeriğin 'tüketilmek' için değil, üzerine düşünülmek için olduğuna inanıyorsanız; doğru yerdesiniz. Sayfamız açık, zihnimiz berrak."
-  }
+  },
+  "joinNow": "Hemen Kayıt Ol",
+  "joinUs": "Bize Katıl",
+  "createYourAccount": "Yazmaya başlamak için hesabınızı oluşturun.",
+  "registirationCompleted": "Kayıt işlemin tamamlandı! Giriş sayfasına yönlendiriliyorsun...",
+  "passwordRules": "En az 8 karakter, 1 büyük harf, 1 küçük harf ve 1 sayı içermelidir",
+  "alreadyHaveAccount": "Zaten bir hesabınız var mı? ",
+  "welcomeAboard": "Aramıza hoş geldin !",
+  "fullName": "Ad Soyad",
+  "email": "E-posta",
+  "password": "Parola",
+  "retypePassword": "Parolayı Tekrarla",
+  "welcomeBack": "Hoşgeldin !",
+  "pleaseEnterYourDetails": "Giriş yapmak için bilgilerinizi girin.",
+  "signingIn": "Giriş yapılıyor...",
+  "don'tHaveAccount": "Hesabınız yok mu? ",
+  "joinTheClub": "Aramıza Katıl"
 }

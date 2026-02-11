@@ -2,7 +2,7 @@ import createMiddleware from "next-intl/middleware";
 
 export default createMiddleware({
   locales: ["tr", "en"],
-  defaultLocale: "tr",
+  defaultLocale: "en",
   // URL'de dil kodu yoksa otomatik ekle
   localePrefix: "always",
 });

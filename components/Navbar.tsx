@@ -139,8 +139,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`w-full sticky top-0 z-50 border-b border-slate-200/50 backdrop-blur-md transition-colors duration-300 bg-[#f5f3ea]/90
-      }`}
+      className={`w-full sticky top-0 z-50 border-b border-slate-200/50 backdrop-blur-md transition-colors duration-300 bg-[#f5f3ea]/90!`}
     >
       {" "}
       <div className="max-w-7xl mx-auto px-4 md:px-12 h-20 relative">
@@ -149,7 +148,7 @@ export default function Navbar() {
         {isSearching && (
           <div
             ref={searchRef}
-            className="absolute inset-0 bg-white z-[60] flex flex-col shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+            className="absolute inset-0 bg-white z-60 flex flex-col shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
           >
             <form
               onSubmit={handleSearchSubmit}
@@ -375,7 +374,7 @@ export default function Navbar() {
                         onClick={() => setIsProfileOpen(false)}
                         className="block px-4 py-2 text-sm font-bold text-[#f92743] hover:bg-slate-50"
                       >
-                        Join Now
+                        {t("joinNow")}
                       </Link>
                     </>
                   )}
