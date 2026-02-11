@@ -15,14 +15,12 @@ const handler = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
-        // Veritabanında kullanıcıyı bul
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
 
         if (!user) return null;
 
-        // Şifreyi kontrol et
         const isPasswordCorrect = await bcrypt.compare(
           credentials.password,
           user.password,
@@ -36,7 +34,7 @@ const handler = NextAuth({
     }),
   ],
   pages: {
-    signIn: "/login", // Kendi tasarımımız olan login sayfasını kullanacağız
+    signIn: "/login",
   },
 });
 
