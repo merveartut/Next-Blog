@@ -1,37 +1,48 @@
+import { supabase } from "@/lib/supabase"; // Az önce oluşturduğun dosya
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    const formData = await request.formData();
+    const formData = await req.formData();
     const file = formData.get("image") as File;
 
     if (!file) {
-      return NextResponse.json({ success: 0 }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: "Dosya eksik" },
+        { status: 400 },
+      );
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    // Dosya adını benzersiz yapalım (Daktilo vuruşu gibi net)
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    const filePath = `uploads/${fileName}`;
 
-    // Kayıt dizinini ayarla (public/uploads)
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(uploadDir, { recursive: true });
+    // 1. Supabase Storage'a (blog-images bucket'ına) yüklüyoruz
+    const { data, error } = await supabase.storage
+      .from("blog-images")
+      .upload(filePath, file, {
+        contentType: file.type,
+        upsert: true,
+      });
 
-    const filename = `${Date.now()}-${file.name.replace(/\s/g, "-")}`;
-    const filePath = path.join(uploadDir, filename);
+    if (error) throw error;
 
-    await writeFile(filePath, buffer);
+    // 2. Görselin Public URL'ini alıyoruz
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("blog-images").getPublicUrl(filePath);
 
-    // Editor.js'in beklediği formatta cevap dön
+    // CKEditor'ün beklediği formatta dönüyoruz
     return NextResponse.json({
-      success: 1,
-      file: {
-        url: `/uploads/${filename}`,
-      },
+      success: true,
+      file: { url: publicUrl },
     });
-  } catch (error) {
-    console.error("Yükleme hatası:", error);
-    return NextResponse.json({ success: 0 });
+  } catch (error: any) {
+    console.error("Upload Error:", error);
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 },
+    );
   }
 }

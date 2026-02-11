@@ -70,15 +70,17 @@ export default function FilteredPostList({
               ? post.imageUrl
               : firstImageInContent || "/images/placeholder.png";
 
-          // URL'yi temizle (tırnaklardan tamamen arındır)
-          displayImage = displayImage.replace(/[\\"]/g, "").trim();
+          if (post.imageUrl || displayImage) {
+            // URL'yi temizle (tırnaklardan tamamen arındır)
+            displayImage = displayImage.replace(/[\\"]/g, "").trim();
 
-          // Next.js Image için yol kontrolü
-          if (
-            !displayImage.startsWith("http") &&
-            !displayImage.startsWith("/")
-          ) {
-            displayImage = `/${displayImage}`;
+            // Next.js Image için yol kontrolü
+            if (
+              !displayImage.startsWith("http") &&
+              !displayImage.startsWith("/")
+            ) {
+              displayImage = `/${displayImage}`;
+            }
           }
 
           return (
@@ -91,18 +93,20 @@ export default function FilteredPostList({
     `}
             >
               {/* Image Section */}
-              <div
-                className={`relative overflow-hidden bg-slate-50 
+              {(post.imageUrl || displayImage) && (
+                <div
+                  className={`relative overflow-hidden bg-slate-50 
                 ${isFeatured ? "w-full md:w-1/2 aspect-video md:aspect-auto" : "w-full aspect-video"}`}
-              >
-                <Image
-                  src={displayImage}
-                  alt={post.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  priority={isFeatured}
-                />
-              </div>
+                >
+                  <Image
+                    src={displayImage}
+                    alt={post.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    priority={isFeatured}
+                  />
+                </div>
+              )}
 
               {/* Content Section */}
               <div
