@@ -28,9 +28,6 @@ export default function Navbar() {
   const [isProfileOpen, setIsProfileOpen] = useState(false); // Profil dropdown durumu
   const searchRef = useRef<HTMLDivElement>(null);
 
-  const isDetailPage =
-    pathname.includes("/blog/") && !pathname.includes("/new/editor");
-
   // Dropdown'ı dışarı tıklandığında kapatmak için
   const profileRef = useRef<HTMLDivElement>(null);
   useEffect(() => {

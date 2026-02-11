@@ -41,19 +41,10 @@ export default function FilteredPostList({
 
   const getFirstImage = (html: string) => {
     if (!html) return null;
-
-    // 1. Önce tırnakları ve kaçış karakterlerini normalize edelim
     const cleanHtml = html.replace(/&quot;/g, '"').replace(/\\"/g, '"');
-
-    // 2. Çok daha esnek bir Regex: src'den sonra gelen ilk tırnağa kadar her şeyi alır
     const match = cleanHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
-
     if (!match) return null;
-
-    let src = match[1];
-
-    // 3. Baştaki ve sondaki tüm gürültüyü (tırnak, slash, boşluk) temizle
-    return src.replace(/^[\\"]+|[\\"]+$/g, "").trim();
+    return match[1].replace(/^[\\"]+|[\\"]+$/g, "").trim();
   };
 
   return (
@@ -65,16 +56,14 @@ export default function FilteredPostList({
 
           const firstImageInContent = getFirstImage(post.content);
 
+          // DEĞİŞİKLİK: Placeholder'ı sildik, sadece gerçek görsel varsa displayImage dolacak
           let displayImage =
             post.imageUrl && post.imageUrl.trim() !== ""
               ? post.imageUrl
-              : firstImageInContent || "/images/placeholder.png";
+              : firstImageInContent;
 
-          if (post.imageUrl || displayImage) {
-            // URL'yi temizle (tırnaklardan tamamen arındır)
+          if (displayImage) {
             displayImage = displayImage.replace(/[\\"]/g, "").trim();
-
-            // Next.js Image için yol kontrolü
             if (
               !displayImage.startsWith("http") &&
               !displayImage.startsWith("/")
@@ -93,7 +82,7 @@ export default function FilteredPostList({
     `}
             >
               {/* Image Section */}
-              {(post.imageUrl || displayImage) && (
+              {displayImage && (
                 <div
                   className={`relative overflow-hidden bg-slate-50 
                 ${isFeatured ? "w-full md:w-1/2 aspect-video md:aspect-auto" : "w-full aspect-video"}`}
@@ -110,7 +99,8 @@ export default function FilteredPostList({
 
               {/* Content Section */}
               <div
-                className={`p-3 flex flex-col grow justify-between ${isFeatured ? "md:w-1/2 md:p-5" : "w-full"}`}
+                className={`p-3 flex flex-col grow justify-between 
+                  ${isFeatured ? (displayImage ? "md:w-1/2 md:p-5" : "w-full md:p-8") : "w-full"}`}
               >
                 <div>
                   <div className="flex items-center gap-2 mb-1">
@@ -132,8 +122,15 @@ export default function FilteredPostList({
                     {post.title}
                   </h2>
 
-                  {isFeatured && (
-                    <p className="text-slate-500 text-[13px] line-clamp-7 leading-relaxed mb-3">
+                  {(isFeatured || !displayImage) && (
+                    <p
+                      className={`text-slate-500 text-[13px] leading-relaxed mb-4
+        ${
+          isFeatured
+            ? "line-clamp-6 md:line-clamp-8" // Featured için uzun özet
+            : "line-clamp-6" // Görseli olmayan küçük kartlar için orta uzunlukta özet
+        }`}
+                    >
                       {stripHtml(post.content)}
                     </p>
                   )}

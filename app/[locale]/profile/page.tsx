@@ -5,12 +5,19 @@ import Link from "next/link";
 import Image from "next/image";
 import DeleteButton from "@/components/DeleteButton";
 import { PenSquare } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-export default async function ProfilePage() {
+interface PageProps {
+  params: { locale: string };
+}
+
+export default async function ProfilePage({ params }: PageProps) {
   const session = await getServerSession();
 
   if (!session) redirect("/login");
+  const { locale } = await params;
 
+  const t = await getTranslations({ locale });
   // Veritabanından sadece bu kullanıcıya ait postları getir
   const userPosts = await prisma.post.findMany({
     where: {
@@ -52,7 +59,8 @@ export default async function ProfilePage() {
             </h1>
             <p className="text-slate-500">{session.user?.email}</p>
             <p className="text-xs font-bold text-blue-600 mt-2 uppercase">
-              {userPosts.length} Yazı Yayınlandı
+              {userPosts.length} {t("posted")}{" "}
+              {/* Post sayısını göstermek güzel olurdu */}
             </p>
           </div>
         </header>
@@ -60,11 +68,7 @@ export default async function ProfilePage() {
         <h2 className="text-xl font-bold mb-6">Yazılarım</h2>
         <div className="grid gap-4">
           {userPosts.map((post) => {
-            const displayImage =
-              post.imageUrl ||
-              getFirstImage(post.content) ||
-              "/images/placeholder.png";
-            console.log(displayImage);
+            const displayImage = post.imageUrl || getFirstImage(post.content);
             return (
               <div
                 key={post.id}
@@ -75,14 +79,16 @@ export default async function ProfilePage() {
                   href={`/blog/${post.slug}`}
                   className="flex-1 flex items-center gap-4"
                 >
-                  <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-100 shrink-0">
-                    <Image
-                      src={displayImage}
-                      alt={post.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+                  {displayImage && (
+                    <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-100 shrink-0">
+                      <Image
+                        src={displayImage}
+                        alt={post.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
                   <div className="overflow-hidden">
                     <h3 className="font-bold text-slate-900 group-hover:text-blue-600 truncate">
                       {post.title}

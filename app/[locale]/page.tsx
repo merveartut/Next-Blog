@@ -42,7 +42,7 @@ export default async function BlogListPage({ params }: PageProps) {
   });
 
   return (
-    <main className="min-h-[calc(100vh-90px)] bg-[#f5f3ea]">
+    <main className="min-h-screen h-auto bg-[#f5f3ea] pb-24 md:pb-32">
       {/* Container: Mobilde tam genişlik, masaüstünde px-32 yerine daha güvenli max-width ve responsive padding */}
       <div className=" mx-auto bg-[#f5f3ea] px-4 lg:px-12 xl:px-48">
         {/* Header Section */}
