@@ -75,9 +75,66 @@ export default function BlogContent({ htmlContent }: { htmlContent: string }) {
           clear: both;
         }
 
+        /* 4. LİSTE (BULLET POINTS) DÜZELTMESİ */
+        .custom-blog-render ul {
+          list-style-type: disc !important;
+          margin-left: 1.5rem !important;
+          margin-bottom: 1rem !important;
+          display: block !important;
+        }
+
+        .custom-blog-render ol {
+          list-style-type: decimal !important;
+          margin-left: 1.5rem !important;
+          margin-bottom: 1rem !important;
+          display: block !important;
+        }
+
+        .custom-blog-render li {
+          display: list-item !important;
+          margin-bottom: 0.5rem !important;
+          padding-left: 0.5rem !important;
+          line-height: 1.7;
+        }
         .custom-blog-render p:empty {
           height: 0.8rem !important;
           display: block;
+        }
+
+        /* 5. BAŞLIK (HEADING) DÜZELTMELERİ */
+        .custom-blog-render h1 {
+          font-size: 2.25rem !important; /* text-4xl */
+          line-height: 2.5rem !important;
+          font-weight: 800 !important;
+          margin-top: 2rem !important;
+          margin-bottom: 1rem !important;
+          letter-spacing: -0.025em !important;
+          display: block !important;
+        }
+
+        .custom-blog-render h2 {
+          font-size: 1.875rem !important; /* text-3xl */
+          line-height: 2.25rem !important;
+          font-weight: 700 !important;
+          margin-top: 1.75rem !important;
+          margin-bottom: 0.75rem !important;
+          display: block !important;
+        }
+
+        .custom-blog-render h3 {
+          font-size: 1.5rem !important; /* text-2xl */
+          line-height: 2rem !important;
+          font-weight: 600 !important;
+          margin-top: 1.5rem !important;
+          margin-bottom: 0.5rem !important;
+          display: block !important;
+        }
+
+        /* Başlıklardan sonra gelen paragrafların yapışık durmaması için */
+        .custom-blog-render h1 + p,
+        .custom-blog-render h2 + p,
+        .custom-blog-render h3 + p {
+          margin-top: 0.5rem !important;
         }
 
         .custom-blog-render.prose {

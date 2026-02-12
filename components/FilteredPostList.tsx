@@ -77,7 +77,7 @@ export default function FilteredPostList({
               key={post.slug}
               prefetch={true}
               href={`/${locale}/blog/${post.slug}`}
-              className={`group flex bg-white/40 rounded-2xl overflow-hidden border border-slate-200/50 hover:shadow-xl transition-all duration-500
+              className={`group flex bg-white/40 rounded-2xl border border-slate-200/50 hover:shadow-xl transition-all duration-500
       ${isFeatured ? "md:col-span-2 flex-col md:flex-row" : "flex-col w-full"}
     `}
             >
@@ -114,13 +114,20 @@ export default function FilteredPostList({
                     ))}
                   </div>
 
-                  <h2
-                    className={`font-sans font-extrabold text-slate-900 group-hover:text-[#f92743] transition-colors leading-[1.1] tracking-tighter
-          ${isFeatured ? "text-3xl md:text-5xl mb-4 italic" : "text-lg md:text-xl mb-1"}
-        `}
-                  >
-                    {post.title}
-                  </h2>
+                  <div className="relative group/title">
+                    <h2
+                      className={`font-sans font-extrabold text-slate-900 group-hover:text-[#f92743] transition-colors leading-[1.1] tracking-tighter
+      ${isFeatured ? "text-3xl md:text-4xl line-clamp-2 mb-4 italic" : "text-lg md:text-xl mb-1 line-clamp-2"}
+    `}
+                    >
+                      {post.title}
+                    </h2>
+
+                    {/* Tooltip: Artık h2'nin dışında ama aynı grup içinde */}
+                    <span className="invisible opacity-0 group-hover/title:visible group-hover/title:opacity-100 pointer-events-none absolute left-0 -top-2 -translate-y-full w-max max-w-[280px] transition-all duration-200 rounded-lg bg-slate-900 px-3 py-2 text-[12px] font-bold text-white shadow-2xl z-[9999] leading-normal whitespace-normal break-words after:content-[''] after:absolute after:top-full after:left-4 after:border-8 after:border-transparent after:border-t-slate-900">
+                      {post.title}
+                    </span>
+                  </div>
 
                   {(isFeatured || !displayImage) && (
                     <p
