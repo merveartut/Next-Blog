@@ -80,21 +80,50 @@ export default function BlogContent({ htmlContent }: { htmlContent: string }) {
           display: block;
         }
 
+        .custom-blog-render.prose {
+          /* Tüm prose elementleri için ana renk tanımı */
+          --tw-prose-body: #1e293b;
+          --tw-prose-headings: #0f172a;
+          --tw-prose-lead: #334155;
+          --tw-prose-links: #f92743;
+          --tw-prose-bold: #0f172a;
+          --tw-prose-counters: #64748b;
+          --tw-prose-bullets: #cbd5e1;
+          --tw-prose-hr: #e2e8f0;
+          --tw-prose-quotes: #0f172a;
+          --tw-prose-quote-borders: #e2e8f0;
+          --tw-prose-captions: #64748b;
+          --tw-prose-code: #0f172a;
+          --tw-prose-pre-code: #e2e8f0;
+          --tw-prose-pre-bg: #1e293b;
+          --tw-prose-th-borders: #cbd5e1;
+          --tw-prose-td-borders: #e2e8f0;
+
+          max-width: none;
+          color: #1e293b !important;
+        }
+
+        .custom-blog-render h1,
+        .custom-blog-render h2,
+        .custom-blog-render h3,
+        .custom-blog-render strong,
+        .custom-blog-render b,
+        .custom-blog-render blockquote {
+          color: #0f172a !important; /* Başlıklar ve kalın yazılar daha koyu */
+        }
+
+        .custom-blog-render p,
+        .custom-blog-render li,
+        .custom-blog-render span {
+          color: #1e293b !important; /* Ana metin slate-900 */
+        }
+
         .custom-blog-render {
           /* iPhone Safari metin netleştirme */
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
           /* Koyu modda renklerin silikleşmesini engelleme */
           color-scheme: light;
-        }
-
-        .custom-blog-render p,
-        .custom-blog-render span,
-        .custom-blog-render li {
-          /* Yazı rengini tam siyahın bir tık üstüne sabitleyerek kontrastı artırıyoruz */
-          color: #1e293b !important; /* slate-900 tonu */
-          /* Safari bazen font ağırlığını (weight) azaltabiliyor, bunu engellemek için: */
-          -webkit-text-size-adjust: 100%;
         }
       `}</style>
     </article>
