@@ -49,9 +49,9 @@ export default async function BlogListPage({ params }: PageProps) {
         <section className="relative py-10 md:py-16 overflow-hidden">
           <div className="relative text-start border-b border-slate-400 pb-10">
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-medium text-slate-900 mb-6 md:mb-8 leading-[1.1] tracking-tight">
-              Curated Thoughts on <span className="text-[#f92743]">Code</span>,
-              <br className="hidden md:block" /> Life, and Everything in
-              Between.
+              Curated Thoughts on Code,
+              <br className="hidden md:block" /> Life, and{" "}
+              <span className="text-[#f92743]">Everything</span> in Between.
             </h1>
           </div>
         </section>
