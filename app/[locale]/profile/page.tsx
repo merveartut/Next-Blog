@@ -14,7 +14,16 @@ interface PageProps {
 export default async function ProfilePage({ params }: PageProps) {
   const session = await getServerSession();
 
-  if (!session) redirect("/login");
+  if (!session || !session.user?.email) redirect("/login");
+
+  const dbUser = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { name: true, email: true },
+  });
+
+  if (!dbUser) {
+    return redirect("/login");
+  }
   const { locale } = await params;
 
   const t = await getTranslations({ locale });
@@ -22,7 +31,7 @@ export default async function ProfilePage({ params }: PageProps) {
   const userPosts = await prisma.post.findMany({
     where: {
       author: {
-        equals: session.user?.name || "",
+        equals: dbUser.name || "",
         mode: "insensitive",
       },
     },
@@ -52,11 +61,11 @@ export default async function ProfilePage({ params }: PageProps) {
         {/* HEADER: Mobilde dikey (center), Masaüstünde yatay (start) */}
         <header className="flex flex-col md:flex-row items-center gap-6 mb-12 bg-transparent border border-amber-950/40 p-6 md:p-8 rounded-3xl shadow-sm text-center md:text-left">
           <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl text-white font-black shrink-0">
-            {session.user?.name?.charAt(0)}
+            {dbUser?.name?.charAt(0)}
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="text-2xl md:text-3xl font-black text-slate-900 truncate">
-              {session.user?.name}
+              {dbUser?.name}
             </h1>
             <p className="text-slate-500 truncate">{session.user?.email}</p>
             <p className="text-xs font-bold text-blue-600 mt-2 uppercase">
