@@ -29,14 +29,15 @@
   "passwordRules": "En az 8 karakter, 1 büyük harf, 1 küçük harf ve 1 sayı içermelidir",
   "alreadyHaveAccount": "Zaten bir hesabınız var mı? ",
   "welcomeAboard": "Aramıza hoş geldin !",
-  "fullName": "Ad Soyad",
+  "fullName": "Nickname",
   "email": "E-posta",
   "password": "Parola",
   "retypePassword": "Parolayı Tekrarla",
-  "welcomeBack": "Hoşgeldin !",
-  "pleaseEnterYourDetails": "Giriş yapmak için bilgilerinizi girin.",
+  "welcomeBack": "BeLog'a Hoşgeldin",
+  "pleaseEnterYourDetails": "Giriş yapmak için bilgilerinizi giriniz.",
   "signingIn": "Giriş yapılıyor...",
-  "don'tHaveAccount": "Hesabınız yok mu? ",
-  "joinTheClub": "Aramıza Katıl",
-  "posted": "yazı yayınladı"
+  "dontHaveAccount": "Hesabın yok mu? ",
+  "joinTheClub": "Aramıza Katıl!",
+  "posted": "yazı yayınladı",
+  "myPosts": "Postlarım"
 }

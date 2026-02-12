@@ -79,6 +79,23 @@ export default function BlogContent({ htmlContent }: { htmlContent: string }) {
           height: 0.8rem !important;
           display: block;
         }
+
+        .custom-blog-render {
+          /* iPhone Safari metin netleştirme */
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          /* Koyu modda renklerin silikleşmesini engelleme */
+          color-scheme: light;
+        }
+
+        .custom-blog-render p,
+        .custom-blog-render span,
+        .custom-blog-render li {
+          /* Yazı rengini tam siyahın bir tık üstüne sabitleyerek kontrastı artırıyoruz */
+          color: #1e293b !important; /* slate-900 tonu */
+          /* Safari bazen font ağırlığını (weight) azaltabiliyor, bunu engellemek için: */
+          -webkit-text-size-adjust: 100%;
+        }
       `}</style>
     </article>
   );

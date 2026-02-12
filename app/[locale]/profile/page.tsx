@@ -47,40 +47,43 @@ export default async function ProfilePage({ params }: PageProps) {
   };
 
   return (
-    <main className="min-h-[calc(100vh-90px)] bg-amber-50 py-12 px-6">
+    <main className="min-h-[calc(100vh-90px)] bg-amber-50 py-8 md:py-12 px-4 md:px-6">
       <div className="max-w-4xl mx-auto">
-        <header className="flex items-center gap-6 mb-12 bg-transparent border border-amber-950/40 p-8 rounded-3xl shadow-sm">
-          <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl text-white font-black">
+        {/* HEADER: Mobilde dikey (center), Masaüstünde yatay (start) */}
+        <header className="flex flex-col md:flex-row items-center gap-6 mb-12 bg-transparent border border-amber-950/40 p-6 md:p-8 rounded-3xl shadow-sm text-center md:text-left">
+          <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-3xl text-white font-black shrink-0">
             {session.user?.name?.charAt(0)}
           </div>
-          <div>
-            <h1 className="text-3xl font-black text-slate-900">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl md:text-3xl font-black text-slate-900 truncate">
               {session.user?.name}
             </h1>
-            <p className="text-slate-500">{session.user?.email}</p>
+            <p className="text-slate-500 truncate">{session.user?.email}</p>
             <p className="text-xs font-bold text-blue-600 mt-2 uppercase">
-              {userPosts.length} {t("posted")}{" "}
-              {/* Post sayısını göstermek güzel olurdu */}
+              {userPosts.length} {t("posted")}
             </p>
           </div>
         </header>
 
-        <h2 className="text-xl font-bold mb-6">Yazılarım</h2>
+        <h2 className="text-xl font-bold mb-6 text-slate-800">
+          {t("myPosts") || "Yazılarım"}
+        </h2>
+
         <div className="grid gap-4">
           {userPosts.map((post) => {
             const displayImage = post.imageUrl || getFirstImage(post.content);
             return (
               <div
                 key={post.id}
-                className="relative group flex items-center gap-4 bg-transparent border border-amber-950/40 p-4 rounded-2xl  hover:shadow-md transition-all"
+                className="relative group flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white/50 border border-amber-950/20 p-4 rounded-2xl hover:shadow-md transition-all"
               >
-                {/* Link'i sadece içeriğe sarıyoruz, silme butonu dışarıda kalmalı */}
+                {/* Sol Kısım: Görsel ve Başlık */}
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="flex-1 flex items-center gap-4"
+                  className="flex-1 flex items-center gap-4 w-full min-w-0"
                 >
                   {displayImage && (
-                    <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-100 shrink-0">
+                    <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden bg-slate-100 shrink-0">
                       <Image
                         src={displayImage}
                         alt={post.title}
@@ -89,37 +92,42 @@ export default async function ProfilePage({ params }: PageProps) {
                       />
                     </div>
                   )}
-                  <div className="overflow-hidden">
-                    <h3 className="font-bold text-slate-900 group-hover:text-blue-600 truncate">
+                  <div className="overflow-hidden flex-1">
+                    <h3 className="font-bold text-slate-900 group-hover:text-blue-600 truncate text-base md:text-lg">
                       {post.title}
                     </h3>
-                    {/* Etiket hatası düzeltildi: p ile başlayıp p ile bitiyor */}
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                       <time dateTime={post.createdAt.toISOString()}>
                         {new Intl.DateTimeFormat("tr-TR").format(
                           new Date(post.createdAt),
                         )}
                       </time>
-                      {/* Küçük bir daktilo ayıracı ekleyelim */}
                       <span className="text-slate-200">•</span>
-                      <span>{post.author}</span>
+                      <span className="truncate">{post.author}</span>
                     </p>
                   </div>
                 </Link>
-                <Link
-                  href={`/blog/${post.slug}/editor`} // Yazının ID'si ile editöre gidiyoruz
-                  className="p-2 text-slate-500 hover:text-blue-600 rounded-lg transition-all"
-                  title="Yazıyı Düzenle"
-                >
-                  <PenSquare size={18} />
-                </Link>
-                {/* SİLME BUTONU */}
-                <DeleteButton postId={post.id} />
+
+                {/* Sağ Kısım: Aksiyon Butonları */}
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end border-t sm:border-none pt-3 sm:pt-0 mt-1 sm:mt-0">
+                  <Link
+                    href={`/blog/${post.slug}/editor`}
+                    className="flex items-center gap-2 p-2 px-3 sm:px-2 text-slate-500 hover:text-blue-600 rounded-lg transition-all bg-slate-50 sm:bg-transparent"
+                    title="Yazıyı Düzenle"
+                  >
+                    <PenSquare size={18} />
+                    <span className="sm:hidden text-xs font-bold">Düzenle</span>
+                  </Link>
+                  <div className="bg-slate-50 sm:bg-transparent rounded-lg">
+                    <DeleteButton postId={post.id} />
+                  </div>
+                </div>
               </div>
             );
           })}
+
           {userPosts.length === 0 && (
-            <p className="text-slate-400 text-center py-10">
+            <p className="text-slate-400 text-center py-10 italic">
               You haven't written anything yet.
             </p>
           )}

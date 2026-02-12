@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const t = useTranslations();
@@ -41,7 +42,7 @@ export default function LoginPage() {
       <div className="w-full max-w-125 bg-white p-10 rounded-3xl shadow-xl border border-slate-100">
         <h1 className="text-3xl font-black text-slate-900 mb-2">
           {t("welcomeBack")}
-          <span className="text-blue-600">.</span>
+          <span className="text-blue-600">!</span>
         </h1>
         <p className="text-slate-500 mb-8 text-sm">
           {t("pleaseEnterYourDetails")}
@@ -71,14 +72,23 @@ export default function LoginPage() {
             <label className="block text-xs font-bold uppercase text-slate-400 mb-2">
               {t("password")}
             </label>
-            <input
-              required
-              type="password"
-              disabled={isLoading}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none transition-all"
-              placeholder="••••••••"
-            />
+            <div className="relative">
+              <input
+                required
+                type={showPassword ? "text" : "password"} // Dinamik tip
+                disabled={isLoading}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none transition-all pr-12" // Sağdan boşluk (pr-12)
+                placeholder="••••••••"
+              />
+              <button
+                type="button" // Formu submit etmemesi için önemli
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
           <button
             disabled={isLoading}

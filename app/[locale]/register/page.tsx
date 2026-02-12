@@ -3,7 +3,7 @@
 import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function RegisterPage() {
@@ -16,6 +16,7 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const t = useTranslations();
@@ -99,25 +100,34 @@ export default function RegisterPage() {
             }
           />
           <div className="space-y-3">
-            <input
-              required
-              type="password"
-              placeholder={t("password")}
-              disabled={isLoading || success}
-              className={`w-full px-4 py-3 rounded-xl bg-slate-50 border outline-none focus:ring-2 transition-all font-sans ${
-                error && formData.password !== confirmPassword
-                  ? "border-red-300 ring-red-100"
-                  : "border-slate-200 focus:ring-blue-400"
-              }`}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
+            <div className="relative">
+              <input
+                required
+                type={showPassword ? "text" : "password"}
+                placeholder={t("password")}
+                disabled={isLoading || success}
+                className={`w-full px-4 py-3 rounded-xl pr-12 bg-slate-50 border outline-none focus:ring-2 transition-all font-sans ${
+                  error && formData.password !== confirmPassword
+                    ? "border-red-300 ring-red-100"
+                    : "border-slate-200 focus:ring-blue-400"
+                }`}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
 
             {/* Şifre Tekrar Inputu */}
             <input
               required
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder={t("retypePassword")}
               disabled={isLoading || success}
               className={`w-full px-4 py-3 rounded-xl bg-slate-50 border outline-none focus:ring-2 transition-all font-sans ${

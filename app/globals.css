@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -38,4 +39,17 @@ textarea::placeholder {
 input::-moz-placeholder,
 textarea::-moz-placeholder {
   opacity: 1 !important;
+}
+
+@supports (backdrop-filter: blur(0px)) {
+  nav {
+    /* Safari'nin bulanıklık ve renk işleme motorunu stabilize eder */
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* Bazı mobil tarayıcıların otomatik renk atamasını engeller */
+nav {
+  contain: paint;
 }

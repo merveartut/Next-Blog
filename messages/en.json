@@ -29,14 +29,15 @@
   "passwordRules": "Min. 8 chars, 1 uppercase, 1 lowercase & 1 number",
   "alreadyHaveAccount": "Already have an account?",
   "welcomeAboard": "Welcome aboard !",
-  "fullName": "Full Name",
+  "fullName": "Nickname",
   "email": "Email",
   "password": "Password",
   "retypePassword": "Retype Password",
-  "welcomeBack": "Welcome back !",
+  "welcomeBack": "Welcome back to BeLog",
   "pleaseEnterYourDetails": "Please enter your details to log in.",
   "signingIn": "Signing in...",
-  "don'tHaveAccount": "Don't have an account? ",
+  "dontHaveAccount": "Don't have an account? ",
   "joinTheClub": "Join the club",
-  "posted": "posted"
+  "posted": "posted",
+  "myPosts": "My Posts"
 }
