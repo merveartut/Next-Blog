@@ -81,7 +81,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
             </h1>
 
             {/* Yazar ve Tarih: Mobilde dikey, SM ekranlarda yatay */}
-            <div className="flex flex-col w-full max-w-5xl justify-center sm:flex-row items-center gap-4 border-t border-slate-200 border-b py-6">
+            <div className="flex flex-row w-full max-w-5xl justify-center items-center gap-4 border-t border-slate-200 border-b py-6">
               <div className="flex items-center gap-4">
                 <div className="flex gap-2 items-center">
                   <div className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-white text-slate-500 flex items-center justify-center text-xs font-bold border-2 border-slate-500 shadow-sm">
