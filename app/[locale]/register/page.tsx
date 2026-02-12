@@ -86,7 +86,7 @@ export default function RegisterPage() {
             type="text"
             placeholder={t("fullName")}
             disabled={isLoading || success}
-            className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-3 text-slate-800 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400"
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
           <input
@@ -94,7 +94,7 @@ export default function RegisterPage() {
             type="email"
             placeholder={t("email")}
             disabled={isLoading || success}
-            className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-3 rounded-xl text-slate-800 bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-blue-400"
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
@@ -106,7 +106,7 @@ export default function RegisterPage() {
                 type={showPassword ? "text" : "password"}
                 placeholder={t("password")}
                 disabled={isLoading || success}
-                className={`w-full px-4 py-3 rounded-xl pr-12 bg-slate-50 border outline-none focus:ring-2 transition-all font-sans ${
+                className={`w-full px-4 py-3 rounded-xl pr-12 text-slate-800 bg-slate-50 border outline-none focus:ring-2 transition-all font-sans ${
                   error && formData.password !== confirmPassword
                     ? "border-red-300 ring-red-100"
                     : "border-slate-200 focus:ring-blue-400"
@@ -130,7 +130,7 @@ export default function RegisterPage() {
               type={showPassword ? "text" : "password"}
               placeholder={t("retypePassword")}
               disabled={isLoading || success}
-              className={`w-full px-4 py-3 rounded-xl bg-slate-50 border outline-none focus:ring-2 transition-all font-sans ${
+              className={`w-full px-4 py-3 rounded-xl text-slate-800 bg-slate-50 border outline-none focus:ring-2 transition-all font-sans ${
                 error && formData.password !== confirmPassword
                   ? "border-red-300 ring-red-100"
                   : "border-slate-200 focus:ring-blue-400"

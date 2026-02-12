@@ -64,7 +64,7 @@ export default function LoginPage() {
               type="email"
               disabled={isLoading}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none transition-all"
+              className="w-full px-4 py-3 text-slate-800 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none transition-all"
               placeholder="admin@example.com"
             />
           </div>
@@ -78,7 +78,7 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"} // Dinamik tip
                 disabled={isLoading}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none transition-all pr-12" // Sağdan boşluk (pr-12)
+                className="w-full px-4 py-3 text-slate-800 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none transition-all pr-12" // Sağdan boşluk (pr-12)
                 placeholder="••••••••"
               />
               <button
