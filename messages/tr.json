@@ -18,9 +18,9 @@
   "throwPaper": "Kağıt Yırt",
   "About": {
     "title": "Be Log Nedir?",
-    "content": "Blog sitelerinin bile nostalji kaldığı bir çağda yaşamaktan darlandıysanız yalnız değilsiniz. Hoş geldiniz. Burası, her şeyin 15 saniyelik videolara sığdırılmaya çalışıldığı ve dikkatin en ucuz para birimi olduğu o dijital gürültünün ortasında bir nefes boşluğu. Algoritmaların ne okuyacağımıza, neyi beğeneceğimize ve ne kadar süre odaklanacağımıza karar vermesinden yorulanlar için kurulmuş bir durak.",
-    "p2": "Bu sitenin varlık sebebi; hızın derinliği öldürdüğü bu dönemde, düşünceleri acele etmeden yazıya dökmek. Burada sadece kod satırları veya tasarım trendleri yok; yaşamın karmaşası, teknolojinin jargonu ve 'modern' dediğimiz o devasa makinenin dişlileri arasında kalan her şey var. Nostaljiye sadece geçmişi sevdiğimiz için değil, bugünün hızıyla baş edemediğimiz için sığınıyoruz.",
-    "footer": "İçeriğin 'tüketilmek' için değil, üzerine düşünülmek için olduğuna inanıyorsanız; doğru yerdesiniz. Sayfamız açık, zihnimiz berrak."
+    "content": "Blog sitelerinin nostalji kaldığı bir çağda yaşamaktan darlandıysanız yalnız değilsiniz. Hoş geldiniz. Burası, her şeyin 15 saniyelik videolara sığdırılmaya çalışıldığı o dijital gürültünün ortasında bir nefes alma platformu. Algoritmaların ne okuyacağımıza, neyi beğeneceğimize ve ne kadar süre odaklanacağımıza karar vermesinden yorulanlar için kurulmuş bir durak.",
+    "p2": "Bu sitenin varlık sebebi; tüketim düşkünlüğünün derinliği öldürdüğü bu dönemde, düşünceleri acele etmeden yazıya dökmek. Burası anlatacak bir hikayesi olan herkesin buluşma noktası. Teknoloji dünyasından günlük hayatın içindeki küçük farkındalıklara, siyasetten üzerine konuşmak istediğimiz keyifli anlara kadar her konuda yazıya yer var. Nostaljiye sadece geçmişi sevdiğimiz için değil, bugünün hızıyla baş edemediğimiz için sığınıyoruz.",
+    "footer": "İçeriğin 'tüketilmek' için değil, üzerine düşünülmek için olduğuna inanıyorsanız; doğru yerdesiniz. Sayfamız temiz, zihnimiz berrak."
   },
   "joinNow": "Hemen Kayıt Ol",
   "joinUs": "Bize Katıl",
