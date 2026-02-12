@@ -49,7 +49,20 @@ textarea::-moz-placeholder {
   }
 }
 
-/* Bazı mobil tarayıcıların otomatik renk atamasını engeller */
 nav {
-  contain: paint;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  /* Navbar'ın kendi içinde bağımsız bir katman olmasını sağlar */
+}
+
+/* Dropdown'ın her zaman en önde olmasını garanti altına alalım */
+.absolute.z-\[100\] {
+  z-index: 100 !important;
+}
+
+/* İçeriğin navbarın üzerine çıkmasını engellemek için */
+main {
+  position: relative;
+  z-index: 1;
 }

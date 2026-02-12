@@ -127,7 +127,7 @@ export default function FilteredPostList({
                       className={`text-slate-500 text-[13px] leading-relaxed mb-4
         ${
           isFeatured
-            ? "line-clamp-6 md:line-clamp-8" // Featured için uzun özet
+            ? "line-clamp-6 md:line-clamp-4" // Featured için uzun özet
             : "line-clamp-6" // Görseli olmayan küçük kartlar için orta uzunlukta özet
         }`}
                     >

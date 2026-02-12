@@ -136,7 +136,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`w-full sticky top-0 z-50 border-b border-slate-200/50 backdrop-blur-md transition-colors duration-300 !bg-[#f5f3ea]`}
+      className={`w-full sticky top-0 z-[999] border-b border-slate-200/50 backdrop-blur-md transition-colors duration-300 !bg-[#f5f3ea] isolate`}
     >
       {" "}
       <div className="max-w-7xl mx-auto px-4 md:px-12 h-20 relative">
@@ -238,7 +238,8 @@ export default function Navbar() {
           </div>
 
           {/* SAĞ: Aksiyonlar */}
-          <div className="flex-1 flex items-center justify-end gap-2 md:gap-4">
+          <div className="flex-1 flex items-center justify-end gap-2 md:gap-4 relative">
+            {" "}
             {/* Masaüstü Dil Değiştirici (Desktop Only) */}
             <div className="hidden md:flex items-center gap-2 mr-2 text-[11px] font-bold tracking-tighter text-slate-400">
               <Link
@@ -265,7 +266,6 @@ export default function Navbar() {
                 <span className="hidden md:inline">{t("write")}</span>
               </Link>
             )}
-
             {/* Arama Butonu */}
             <button
               onClick={() => setIsSearching(true)}
@@ -273,9 +273,7 @@ export default function Navbar() {
             >
               <Search size={20} />
             </button>
-
             <div className="h-6 w-[1px] bg-slate-300 mx-1 hidden md:block"></div>
-
             {/* PROFIL / AUTH DROPDOWN */}
             <div className="relative" ref={profileRef}>
               {session ? (
@@ -302,7 +300,8 @@ export default function Navbar() {
 
               {/* DROPDOWN MENU */}
               {isProfileOpen && (
-                <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 animate-in fade-in zoom-in-95 duration-100 origin-top-right z-[100]">
+                  {" "}
                   {session ? (
                     <>
                       <div className="px-4 py-2 border-b border-slate-50 mb-1">
