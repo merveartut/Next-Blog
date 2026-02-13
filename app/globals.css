@@ -41,6 +41,29 @@ textarea::-moz-placeholder {
   opacity: 1 !important;
 }
 
+.ProseMirror {
+  color: #0f172a !important; /* Çok koyu slate (neredeyse siyah) */
+  caret-color: #f92743; /* Yazım imlecini marka rengin yapalım, şık durur */
+}
+
+/* Başlıkların silik görünmesini engelle */
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3 {
+  color: #020617 !important; /* En koyu ton */
+}
+
+/* Paragrafların ve listelerin rengi */
+.ProseMirror p,
+.ProseMirror li {
+  color: #0f172a !important;
+}
+
+/* Yazı yazarken "silikleşme" efektini (varsa) kaldır */
+.ProseMirror:focus {
+  color: #0f172a !important;
+}
+
 @supports (backdrop-filter: blur(0px)) {
   nav {
     /* Safari'nin bulanıklık ve renk işleme motorunu stabilize eder */
