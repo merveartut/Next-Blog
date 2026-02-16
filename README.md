@@ -2,6 +2,8 @@
 
 **Be Log** is a minimalist, high-performance personal blog platform designed with a "digital typewriter" aesthetic. Built with **Next.js 15**, it combines modernist architecture-inspired UI with advanced features like dynamic image processing, and seamless social media integration.
 
+## 🎉💥 Project on live [here](https://www.thebelog.com) !
+
 ---
 
 ## ✨ Features
