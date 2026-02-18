@@ -6,6 +6,7 @@ import BlogContent from "./BlogContent";
 import FavoriteButton from "@/components/FavoriteButton";
 import { getServerSession } from "next-auth";
 import { PenSquare } from "lucide-react";
+import ShareStoryButton from "@/components/ShareStoryButton";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -129,6 +130,15 @@ export default async function BlogDetailPage({ params }: PageProps) {
                     <PenSquare size={18} />
                   </Link>
                 )}
+
+                <ShareStoryButton
+                  title={post.title}
+                  slug={post.slug}
+                  imageUrl={post.imageUrl}
+                  content={post.content}
+                  createdAt={post.createdAt}
+                  author={post.author} // Bu satırı ekledik
+                />
               </div>
             </div>
           </div>
