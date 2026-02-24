@@ -2,23 +2,22 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get("email");
+
     // Veritabanından tüm postları çekiyoruz
     const posts = await prisma.post.findMany({
-      orderBy: {
-        createdAt: "desc", // En yeni yazılar en üstte
-      },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        content: true, // İçerikten ilk resmi veya özeti ayıklamak için
-        imageUrl: true,
-        author: true,
-        createdAt: true,
-        categories: true,
-        favoriteCount: true,
+      orderBy: { createdAt: "desc" },
+      include: {
+        // Eğer email varsa, o kullanıcının favorileyip favorilemediğini kontrol et
+        favoritedBy: email
+          ? {
+              where: { email: email },
+              select: { email: true },
+            }
+          : false,
       },
     });
 
