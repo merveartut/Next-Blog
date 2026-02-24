@@ -1,3 +1,5 @@
+///home/merve/Next-Blog/app/api/posts/[slug]/favorite/route.ts
+
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
@@ -8,8 +10,10 @@ export async function POST(
 ) {
   const { slug } = await params;
   const session = await getServerSession();
+  const body = await req.json();
+  const email = session?.user?.email || body.email;
 
-  if (!session?.user?.email) {
+  if (!email) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
@@ -19,7 +23,7 @@ export async function POST(
       where: {
         slug: slug,
         favoritedBy: {
-          some: { email: session.user.email },
+          some: { email: email },
         },
       },
     });
@@ -32,8 +36,8 @@ export async function POST(
       data: {
         favoriteCount: isFavorited ? { decrement: 1 } : { increment: 1 },
         favoritedBy: isFavorited
-          ? { disconnect: { email: session.user.email } } // Bağlantıyı kopar
-          : { connect: { email: session.user.email } }, // Bağlantıyı kur
+          ? { disconnect: { email: email } } // Bağlantıyı kopar
+          : { connect: { email: email } }, // Bağlantıyı kur
       },
     });
 
