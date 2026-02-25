@@ -1,4 +1,3 @@
-// app/api/posts/route.ts
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -6,12 +5,20 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const email = searchParams.get("email");
+    const author = searchParams.get("author"); // Yeni: Yazar filtresini yakalıyoruz
 
-    // Veritabanından tüm postları çekiyoruz
     const posts = await prisma.post.findMany({
+      // Eğer author parametresi varsa filtrele, yoksa hepsini getir
+      where: author
+        ? {
+            author: {
+              equals: author,
+              mode: "insensitive", // Büyük/küçük harf farkını ortadan kaldırır
+            },
+          }
+        : {},
       orderBy: { createdAt: "desc" },
       include: {
-        // Eğer email varsa, o kullanıcının favorileyip favorilemediğini kontrol et
         favoritedBy: email
           ? {
               where: { email: email },
@@ -21,7 +28,6 @@ export async function GET(req: Request) {
       },
     });
 
-    // Başarılıysa postları döndür
     return NextResponse.json(posts);
   } catch (error) {
     console.error("API Error (All Posts):", error);
