@@ -37,3 +37,46 @@ export async function GET(req: Request) {
     );
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { title, categories, content, author, imageUrl, slug } = body;
+
+    // Next.js projesindeki slug üretim mantığının aynısı
+    const generatedSlug =
+      slug ||
+      title
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/[\s_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+    const post = await prisma.post.upsert({
+      where: { slug: generatedSlug },
+      update: {
+        title,
+        categories,
+        content,
+        imageUrl,
+      },
+      create: {
+        title,
+        slug: generatedSlug,
+        categories,
+        content,
+        imageUrl,
+        author,
+      },
+    });
+
+    return NextResponse.json({ success: true, post }, { status: 200 });
+  } catch (error) {
+    console.error("API Error:", error);
+    return NextResponse.json(
+      { success: false, error: "Database error" },
+      { status: 500 },
+    );
+  }
+}
