@@ -38,3 +38,24 @@ export async function GET(
     );
   }
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: { slug: string } },
+) {
+  try {
+    const identifier = params.slug;
+
+    // Prisma'da ID veya Slug'a göre silme işlemi
+    await prisma.post.delete({
+      where: identifier.length > 20 ? { id: identifier } : { slug: identifier },
+      // Not: Prisma 'where' içinde genelde tek bir unique alan bekler.
+      // Eğer ID gönderiyorsan ID üzerinden silmek en güvenlisidir.
+    });
+
+    return NextResponse.json({ success: true, message: "Yazı imha edildi." });
+  } catch (error) {
+    console.error("Silme Hatası:", error);
+    return NextResponse.json({ error: "Silme başarısız" }, { status: 500 });
+  }
+}
