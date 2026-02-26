@@ -1,5 +1,15 @@
+///home/merve/Next-Blog/app/api/posts/route.ts
+
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "10mb", // Limiti 10MB'a çıkardık
+    },
+  },
+};
 
 export async function GET(req: Request) {
   try {
