@@ -43,7 +43,35 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { title, categories, content, author, imageUrl, slug } = body;
 
-    // Next.js projesindeki slug üretim mantığının aynısı
+    // 💡 KRİTİK NOKTA: İçeriği Web/Mobil uyumlu hale getir
+    let finalizedContent = content;
+
+    // Eğer içerik bir string ise (HTML gelmişse) ve JSON değilse
+    // Web tarafındaki EditorJS'in hata vermemesi için onu JSON kılıfına sokuyoruz.
+    const isJson = (str: string) => {
+      try {
+        JSON.parse(str);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    };
+
+    if (typeof content === "string" && !isJson(content)) {
+      // Saf HTML'i EditorJS'in anlayacağı bir 'paragraph' bloğuna çeviriyoruz
+      finalizedContent = JSON.stringify({
+        time: Date.now(),
+        blocks: [
+          {
+            id: "mobile_entry_" + Date.now(),
+            type: "paragraph",
+            data: { text: content }, // Saf HTML EditorJS paragraflarında çalışır
+          },
+        ],
+        version: "2.28.2",
+      });
+    }
+
     const generatedSlug =
       slug ||
       title
@@ -58,14 +86,14 @@ export async function POST(request: Request) {
       update: {
         title,
         categories,
-        content,
+        content: finalizedContent, // Dönüştürülmüş veya orijinal JSON içerik
         imageUrl,
       },
       create: {
         title,
         slug: generatedSlug,
         categories,
-        content,
+        content: finalizedContent,
         imageUrl,
         author,
       },
@@ -73,9 +101,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, post }, { status: 200 });
   } catch (error) {
-    console.error("API Error:", error);
+    console.error("API Error (POST):", error);
     return NextResponse.json(
-      { success: false, error: "Database error" },
+      { success: false, error: "Daktilo hatası" },
       { status: 500 },
     );
   }
