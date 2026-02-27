@@ -136,12 +136,10 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`w-full sticky top-0 z-[999] border-b border-slate-200/50 backdrop-blur-md transition-colors duration-300 !bg-[#f5f3ea] isolate`}
+      className={`w-full sticky top-0 z-999 border-b border-slate-200/50 backdrop-blur-md transition-colors duration-300 bg-[#f5f3ea]! isolate`}
     >
       {" "}
       <div className="max-w-7xl mx-auto px-4 md:px-12 h-20 relative">
-        {/* 1. ARAMA MODU (Aktifse kaplar) */}
-        {/* 1. ARAMA MODU */}
         {isSearching && (
           <div
             ref={searchRef}
