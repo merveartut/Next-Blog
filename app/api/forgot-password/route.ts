@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       from: "Be Log <onboarding@resend.dev>", // Domain onayı sonrası noreply@thebelog.com yaparsın
       to: email,
       subject: "Reset your password - Be Log.",
-      html: `<p>Daktilo anahtarını kaybetmişsin. Şifreni sıfırlamak için buraya tıkla: <a href="${resetLink}">Şifremi Sıfırla</a></p>`,
+      html: `<p>BeLog şifreni unutmuşsun. Şifreni sıfırlamak için buraya tıkla: <a href="${resetLink}">Şifremi Sıfırla</a></p>`,
     });
 
     return NextResponse.json({ message: "Reset email sent" });
