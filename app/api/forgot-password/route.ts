@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     const resetLink = `https://www.thebelog.com/reset-password?token=${token}`;
 
     await resend.emails.send({
-      from: "Be Log <noreply@thebelog.com>",
+      from: "onboarding@resend.dev",
       to: email,
       subject: "Reset your password - Be Log.",
       html: `<p>Daktilo anahtarını kaybetmişsin. Şifreni sıfırlamak için buraya tıkla: <a href="${resetLink}">Şifremi Sıfırla</a></p>`,
