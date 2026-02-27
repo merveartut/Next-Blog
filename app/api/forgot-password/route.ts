@@ -9,7 +9,7 @@ import { Resend } from "resend";
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = process.env.MY_RESEND_KEY;
 
   console.log(
     "API Key kontrolü:",
