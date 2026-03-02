@@ -22,6 +22,7 @@ export async function GET(request: Request) {
       id: true,
       createdAt: true,
       author: true,
+      content: true,
     },
   });
 
