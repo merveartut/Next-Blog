@@ -3,14 +3,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "10mb", // Limiti 10MB'a çıkardık
-    },
-  },
-};
-
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
