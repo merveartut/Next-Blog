@@ -40,5 +40,11 @@
   "joinTheClub": "Aramıza Katıl!",
   "posted": "yazı yayınladı",
   "myPosts": "Postlarım",
-  "signUp": "Kayıt Ol"
+  "signUp": "Kayıt Ol",
+  "forgotPassword": "Şifremi Unuttum",
+  "send": "Gönder",
+  "forgotPasswordText": " E-posta adresini gir, sana şifreni sıfırlaman için bir bağlantı gönderelim.",
+  "resetPassword": "Şİfreyi Sıfırla",
+  "backToLogin": "Giriş Yap",
+  "allPosts": "Tüm Yazılar"
 }

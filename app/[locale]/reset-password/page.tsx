@@ -1,3 +1,5 @@
+///home/merve/Next-Blog/app/[locale]/reset-password/page.tsx
+
 "use client";
 
 import { useState, Suspense } from "react";

@@ -1,3 +1,5 @@
+///home/merve/Next-Blog/app/api/reset-password/route.ts
+
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";

@@ -7,13 +7,18 @@ import FavoriteButton from "@/components/FavoriteButton";
 import { getServerSession } from "next-auth";
 import { PenSquare } from "lucide-react";
 import ShareStoryButton from "@/components/ShareStoryButton";
+import { getTranslations } from "next-intl/server";
 
 interface PageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }
 
 export default async function BlogDetailPage({ params }: PageProps) {
   const { slug } = await params;
+
+  const { locale } = await params;
+
+  const t = await getTranslations({ locale });
 
   const session = await getServerSession();
 
@@ -44,7 +49,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
               href="/"
               className="no-underline w-full justify-start text-xs md:text-sm font-bold text-[#f92743] hover:text-[#f92743] transition-colors flex items-center gap-2"
             >
-              <span className="text-lg md:text-xl">←</span> Tüm Yazılar
+              <span className="text-lg md:text-xl">←</span> {t("allPosts")}
             </Link>
 
             {/* Kategoriler: Mobilde daha küçük çipler */}

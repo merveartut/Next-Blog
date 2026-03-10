@@ -135,9 +135,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav
-      className={`w-full sticky top-0 z-999 border-b border-slate-200/50 backdrop-blur-md transition-colors duration-300 bg-[#f5f3ea]! isolate`}
-    >
+    <nav className="w-full sticky top-0 z-[999] border-b border-slate-200/50 transition-colors duration-300 bg-[#f5f3ea] isolate">
       {" "}
       <div className="max-w-7xl mx-auto px-4 md:px-12 h-20 relative">
         {isSearching && (
@@ -299,7 +297,17 @@ export default function Navbar() {
               {/* DROPDOWN MENU */}
               {isProfileOpen && (
                 <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl py-2 animate-in fade-in zoom-in-95 duration-100 origin-top-right z-[100]">
-                  {" "}
+                  {/* MOBİL İÇİN EKSTRA LİNKLER (Masaüstünde gizli) */}
+                  <div className="md:hidden border-b border-slate-50 mb-1 pb-1">
+                    <Link
+                      href="/about"
+                      onClick={() => setIsProfileOpen(false)}
+                      className="block px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                    >
+                      {t("about")}
+                    </Link>
+                  </div>
+
                   {session ? (
                     <>
                       <div className="px-4 py-2 border-b border-slate-50 mb-1">
@@ -317,33 +325,6 @@ export default function Navbar() {
                       >
                         <User size={16} /> {t("myProfile")}
                       </Link>
-                      {/* Mobil Dil Değiştirici (Mobile Only) */}
-                      <div className="md:hidden flex items-center gap-3 px-4 py-2 border-t border-slate-100 mt-1 bg-amber-50/30">
-                        <Languages size={14} className="text-slate-400" />
-                        <div className="flex gap-2 text-[10px] font-bold">
-                          <Link
-                            href={getLocalizedPath("tr")}
-                            className={
-                              pathname.startsWith("/tr")
-                                ? "text-[#f92743]"
-                                : "text-slate-400"
-                            }
-                          >
-                            TR
-                          </Link>
-                          <span className="text-slate-200">|</span>
-                          <Link
-                            href={getLocalizedPath("en")}
-                            className={
-                              pathname.startsWith("/en")
-                                ? "text-[#f92743]"
-                                : "text-slate-400"
-                            }
-                          >
-                            EN
-                          </Link>
-                        </div>
-                      </div>
                       <button
                         onClick={() => {
                           signOut();
@@ -372,6 +353,36 @@ export default function Navbar() {
                       </Link>
                     </>
                   )}
+
+                  {/* MOBİL DİL DEĞİŞTİRİCİ - Session bağımsız en alta eklendi */}
+                  <div className="md:hidden flex items-center gap-3 px-4 py-2 border-t border-slate-100 mt-1 bg-slate-50/50">
+                    <Languages size={14} className="text-slate-400" />
+                    <div className="flex gap-3 text-[11px] font-bold">
+                      <Link
+                        href={getLocalizedPath("tr")}
+                        className={
+                          pathname.startsWith("/tr")
+                            ? "text-[#f92743]"
+                            : "text-slate-400"
+                        }
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        TR
+                      </Link>
+                      <span className="text-slate-200">|</span>
+                      <Link
+                        href={getLocalizedPath("en")}
+                        className={
+                          pathname.startsWith("/en")
+                            ? "text-[#f92743]"
+                            : "text-slate-400"
+                        }
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        EN
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

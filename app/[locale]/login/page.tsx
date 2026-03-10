@@ -38,7 +38,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-[calc(100vh-6rem)] bg-amber-50 flex items-center justify-center px-6">
+    <main className="min-h-[calc(100vh-5rem)] bg-[#f5f3ea] flex items-center justify-center px-6">
       <div className="w-full max-w-125 bg-white p-10 rounded-3xl shadow-xl border border-slate-100">
         <h1 className="text-3xl font-black text-slate-900 mb-2">
           {t("welcomeBack")}
@@ -89,6 +89,14 @@ export default function LoginPage() {
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
+          </div>
+          <div className="flex justify-end mt-2">
+            <Link
+              href="/forgot-password"
+              className="text-[11px] font-bold text-slate-400 hover:text-[#f92743] transition-colors"
+            >
+              {t("forgotPassword")}
+            </Link>
           </div>
           <button
             disabled={isLoading}
