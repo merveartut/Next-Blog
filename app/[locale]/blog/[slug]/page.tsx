@@ -83,11 +83,11 @@ export default async function BlogDetailPage({ params }: PageProps) {
             <div className="flex flex-row w-full max-w-5xl justify-center items-center gap-4 border-t border-slate-200 border-b py-6">
               <div className="flex items-center gap-4">
                 <div className="flex gap-2 items-center">
-                  <div className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-white text-slate-500 flex items-center justify-center text-xs font-bold border-2 border-slate-500 shadow-sm">
+                  <div className="w-8 h-8 rounded-full bg-white text-slate-500 flex items-center justify-center text-xs font-bold border-2 border-slate-500 shadow-sm">
                     {post.author?.charAt(0) || "M"}
                   </div>
                   <div className="text-start sm:text-center">
-                    <p className="text-base font-normal text-slate-500">
+                    <p className="sm:text-base text-sm font-normal text-slate-500">
                       {post.author}
                     </p>
                   </div>
@@ -129,14 +129,14 @@ export default async function BlogDetailPage({ params }: PageProps) {
                   </Link>
                 )}
 
-                <ShareStoryButton
+                {/* <ShareStoryButton
                   title={post.title}
                   slug={post.slug}
                   imageUrl={post.imageUrl}
                   content={post.content}
                   createdAt={post.createdAt}
                   author={post.author} // Bu satırı ekledik
-                />
+                /> */}
               </div>
             </div>
           </div>
