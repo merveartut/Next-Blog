@@ -8,6 +8,7 @@ import { getServerSession } from "next-auth";
 import { PenSquare } from "lucide-react";
 import ShareStoryButton from "@/components/ShareStoryButton";
 import { getTranslations } from "next-intl/server";
+import PostCategories from "@/components/PostCategories";
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -53,16 +54,8 @@ export default async function BlogDetailPage({ params }: PageProps) {
             </Link>
 
             {/* Kategoriler: Mobilde daha küçük çipler */}
-            <div className="flex flex-wrap gap-2 justify-center">
-              {post.categories.map((cat, i) => (
-                <span
-                  key={cat}
-                  className={`px-2 md:px-3 py-1 rounded-md text-[10px] md:text-xs font-bold text-white shadow-sm
-                    ${["bg-indigo-400", "bg-emerald-500", "bg-rose-400", "bg-amber-500", "bg-[#f92743]"][i % 5]}`}
-                >
-                  {cat}
-                </span>
-              ))}
+            <div className="flex justify-center">
+              <PostCategories categories={post.categories} />
             </div>
           </div>
 

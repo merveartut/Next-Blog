@@ -132,7 +132,7 @@ export default function BlogEditorPage() {
 
   // 2. ANA EDİTÖR EKRANI
   return (
-    <main className="min-h-[calc(100vh-90px)] bg-amber-50 py-12 px-6">
+    <main className="min-h-[calc(100vh-5rem)] bg-[#f5f3ea] py-12 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <Link
@@ -195,14 +195,11 @@ export default function BlogEditorPage() {
               setFormData({ ...formData, content: JSON.stringify(val) })
             }
           />
-          <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-4xl bg-slate-900 text-white p-4 rounded-2xl shadow-2xl flex items-center justify-between z-50">
-            <span className="text-sm font-medium text-slate-400 px-4 italic">
-              Ready to type...
-            </span>
+          <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-4xl bg-transparent text-white p-2 rounded-2xl flex items-center justify-center z-50">
             <button
               type="submit"
               disabled={loading} // Loading sırasında butonu kilitliyoruz
-              className="flex items-center gap-2 bg-[#f92743] hover:bg-rose-500 px-6 py-2 rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 cursor-pointer hover:scale-105  bg-[#f92743] hover:bg-rose-500 px-6 py-2 rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
