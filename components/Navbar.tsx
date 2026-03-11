@@ -210,13 +210,13 @@ export default function Navbar() {
           {/* SOL: Masaüstü Menüler (Mobilde gizli) */}
           <div className="hidden md:flex items-center gap-6 flex-1">
             <Link
-              href="/"
+              href={pathname.startsWith("/tr") ? "/tr" : "/en"}
               className="text-sm font-semibold text-slate-600 hover:text-[#f92743] transition-colors"
             >
               {t("articles")}
             </Link>
             <Link
-              href="/about"
+              href={pathname.startsWith("/tr") ? "/tr/about" : "/en/about"}
               className="text-sm font-semibold text-slate-600 hover:text-[#f92743] transition-colors"
             >
               {t("about")}
@@ -226,7 +226,7 @@ export default function Navbar() {
           {/* ORTA: Logo */}
           <div className="flex-1 md:flex-none flex justify-start md:justify-center">
             <Link
-              href="/"
+              href={pathname.startsWith("/tr") ? "/tr" : "/en"}
               className="text-xl md:text-2xl font-black text-slate-900 tracking-tighter"
             >
               Be Log<span className="text-[#f92743]">.</span>
@@ -300,7 +300,9 @@ export default function Navbar() {
                   {/* MOBİL İÇİN EKSTRA LİNKLER (Masaüstünde gizli) */}
                   <div className="md:hidden border-b border-slate-50 mb-1 pb-1">
                     <Link
-                      href="/about"
+                      href={
+                        pathname.startsWith("/tr") ? "/tr/about" : "/en/about"
+                      }
                       onClick={() => setIsProfileOpen(false)}
                       className="block px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50"
                     >
@@ -319,7 +321,11 @@ export default function Navbar() {
                         </p>
                       </div>
                       <Link
-                        href="/profile"
+                        href={
+                          pathname.startsWith("/tr")
+                            ? "/tr/profile"
+                            : "/en/profile"
+                        }
                         onClick={() => setIsProfileOpen(false)}
                         className="flex items-center gap-2 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-[#f92743] transition-colors"
                       >

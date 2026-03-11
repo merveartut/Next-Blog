@@ -46,5 +46,6 @@
   "forgotPasswordText": "Enter your email address, and we'll send you a link to reset your password.",
   "resetPassword": "Reset Password",
   "backToLogin": "Back to login",
-  "allPosts": "All Posts"
+  "allPosts": "All Posts",
+  "noMatches": "No matches found..."
 }

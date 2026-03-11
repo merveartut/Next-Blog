@@ -6,6 +6,7 @@ import Image from "next/image";
 import FavoriteButton from "./FavoriteButton";
 import { useContext } from "react";
 import { LoadingContext } from "./LoadingProvider";
+import { useTranslations } from "next-intl";
 
 export default function FilteredPostList({
   initialPosts,
@@ -16,6 +17,8 @@ export default function FilteredPostList({
 }) {
   const searchParams = useSearchParams();
   const search = searchParams.get("search")?.toLowerCase() || "";
+
+  const t = useTranslations();
 
   const filteredPosts = initialPosts.filter((post) => {
     const title = post.title.toLowerCase();
@@ -174,7 +177,7 @@ export default function FilteredPostList({
         })
       ) : (
         <div className="col-span-full py-20 text-center font-mono text-slate-400 italic text-sm">
-          No matches found in the typewriter archives...
+          {t("noMatches")}
         </div>
       )}
     </div>
