@@ -14,6 +14,7 @@ import {
   Languages,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -131,6 +132,14 @@ export default function Navbar() {
       router.push(`/?search=${encodeURIComponent(searchValue.trim())}`);
       setIsSearching(false);
       setSearchValue("");
+    }
+  };
+
+  const handleWriteClick = () => {
+    if (!session) {
+      router.push("/login");
+    } else {
+      router.push("/blog/new/editor");
     }
   };
 
@@ -253,15 +262,19 @@ export default function Navbar() {
               </Link>
             </div>
             {/* Yaz Butonu (Mobilde sadece ikon) */}
-            {session && (
-              <Link
-                href="/blog/new/editor"
-                className="flex items-center gap-2 p-2 md:px-4 md:py-2 bg-[#f92743] text-white rounded-full text-xs font-bold hover:bg-[#f92743] hover:scale-105 transition-all shadow-md"
-              >
-                <PenSquare size={18} />
-                <span className="hidden md:inline">{t("write")}</span>
-              </Link>
-            )}
+            <button
+              onClick={() => {
+                handleWriteClick();
+                sendGAEvent("event", "button_clicked", {
+                  event_category: "engagement",
+                  event_label: "editor",
+                });
+              }}
+              className="flex items-center gap-2 p-2 md:px-4 md:py-2 bg-[#f92743] text-white rounded-full text-xs font-bold hover:bg-[#f92743] hover:scale-105 transition-all shadow-md"
+            >
+              <PenSquare size={18} />
+              <span className="hidden md:inline">{t("write")}</span>
+            </button>
             {/* Arama Butonu */}
             <button
               onClick={() => setIsSearching(true)}

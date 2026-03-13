@@ -7,6 +7,7 @@ import FavoriteButton from "./FavoriteButton";
 import { useContext } from "react";
 import { LoadingContext } from "./LoadingProvider";
 import { useTranslations } from "next-intl";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default function FilteredPostList({
   initialPosts,
@@ -80,6 +81,13 @@ export default function FilteredPostList({
               key={post.slug}
               prefetch={true}
               href={`/${locale}/blog/${post.slug}`}
+              onClick={() => {
+                sendGAEvent("event", "post_card_clicked", {
+                  event_category: "engagement",
+                  event_label: post.title, // Hangi yazının tıklandığını görmek için başlığı gönderiyoruz
+                  value: post.slug,
+                });
+              }}
               className={`group flex bg-white/40 rounded-2xl border border-slate-200/50 hover:shadow-xl transition-all duration-500
       ${isFeatured ? "md:col-span-2 flex-col md:flex-row" : "flex-col w-full"}
     `}

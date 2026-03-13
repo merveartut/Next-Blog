@@ -12,6 +12,7 @@ import {
   JetBrains_Mono,
 } from "next/font/google";
 import { LoadingProvider } from "@/components/LoadingProvider";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -77,6 +78,7 @@ export default async function RootLayout({
           </LoadingProvider>
         </AuthProvider>
       </body>
+      <GoogleAnalytics gaId="G-EFKXKGEFBH" />
     </html>
   );
 }

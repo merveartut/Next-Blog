@@ -17,29 +17,19 @@ export default async function BlogListPage({ params }: PageProps) {
   const session = await getServerSession();
   const t = await getTranslations({ locale });
 
-  const posts = await prisma.post.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      favoritedBy: session?.user?.email
-        ? {
-            where: { email: session.user.email },
-            select: { email: true },
-          }
-        : false,
-    },
-  });
-
-  const popularPosts = await prisma.post.findMany({
-    where: {
-      favoriteCount: {
-        gt: 0, // "Greater Than 0" -> 0'dan büyük olanları getir
+  const [posts, popularPosts] = await Promise.all([
+    prisma.post.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        /* ... favorite logic */
       },
-    },
-    orderBy: {
-      favoriteCount: "desc",
-    },
-    take: 5,
-  });
+    }),
+    prisma.post.findMany({
+      where: { favoriteCount: { gt: 0 } },
+      orderBy: { favoriteCount: "desc" },
+      take: 5,
+    }),
+  ]);
 
   return (
     <main className="min-h-screen h-auto bg-[#f5f3ea] pb-24 md:pb-32">
