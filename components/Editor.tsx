@@ -2,7 +2,28 @@
 
 import React from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import {
+  ClassicEditor,
+  Essentials,
+  Paragraph,
+  Heading,
+  Bold,
+  Italic,
+  Link,
+  List,
+  BlockQuote,
+  Image,
+  ImageUpload,
+  ImageToolbar,
+  ImageStyle, // <--- Yaslama (alignment) için bu şart
+  ImageCaption,
+  Table,
+  TableToolbar,
+  CodeBlock,
+  Autoformat,
+} from "ckeditor5";
+
+import "ckeditor5/ckeditor5.css";
 
 interface EditorProps {
   data: string;
@@ -48,48 +69,65 @@ export default function Editor({ data, onChange }: EditorProps) {
         data={data}
         config={{
           extraPlugins: [MyCustomUploadAdapterPlugin],
-          toolbar: {
-            items: [
-              "heading",
-              "|",
-              "bold",
-              "italic",
-              "link",
-              "bulletedList",
-              "numberedList",
-              "blockQuote",
-              "|",
-              "imageUpload",
-              "insertTable",
-              "undo",
-              "redo",
-            ],
-            shouldNotGroupWhenFull: true,
-          },
+          licenseKey: "GPL",
+          plugins: [
+            Essentials,
+            Paragraph,
+            Heading,
+            Bold,
+            Italic,
+            Link,
+            List,
+            BlockQuote,
+            Image,
+            ImageUpload,
+            ImageToolbar,
+            ImageStyle,
+            ImageCaption, // İmaj eklentilerini eksiksiz ekliyoruz
+            Table,
+            TableToolbar,
+            CodeBlock,
+            Autoformat,
+            MyCustomUploadAdapterPlugin,
+          ],
+          toolbar: [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "link",
+            "|",
+            "bulletedList",
+            "numberedList",
+            "blockQuote",
+            "|",
+            "codeBlock",
+            "|",
+            "imageUpload",
+            "insertTable",
+            "|",
+            "undo",
+            "redo",
+          ],
           image: {
-            styles: {
-              options: [
-                "inline",
-                "block",
-                "side", // Standart string seçenekler
-                {
-                  name: "alignLeft",
-                  title: "Sola Yasla",
-                  icon: "left",
-                  className: "image-style-align-left",
-                  // HATA BURADAYDI: Hangi elementlere uygulanacağını ekliyoruz
-                  modelElements: ["imageBlock", "imageInline"],
-                },
-              ],
-            },
             toolbar: [
               "imageStyle:inline",
-              "imageStyle:alignLeft",
-              "imageStyle:block",
-              "imageStyle:side",
+              "imageStyle:alignLeft", // Sola yasla butonu
+              "imageStyle:block", // Tam genişlik
+              "imageStyle:alignRight", // Sağa yasla butonu
               "|",
               "toggleImageCaption",
               "imageTextAlternative",
+            ],
+            styles: {
+              options: ["inline", "block", "alignLeft", "alignRight"],
+            },
+          },
+          codeBlock: {
+            languages: [
+              { language: "javascript", label: "JS" },
+              { language: "python", label: "Python" },
+              { language: "plaintext", label: "Text" },
             ],
           },
         }}

@@ -1,19 +1,28 @@
 "use client";
 
+import hljs from "highlight.js";
+import "highlight.js/styles/github.css";
+import { useEffect } from "react";
+
 export default function BlogContent({ htmlContent }: { htmlContent: string }) {
   const getCleanHtml = () => {
     if (!htmlContent) return "";
     try {
       return htmlContent
-        .replace(/\\"/g, '"')
-        .replace(/\\n/g, "")
-        .replace(/^"|"$/g, "");
+        .replace(/\\"/g, '"') // Kaçış tırnaklarını düzelt
+        .replace(/\\n/g, "\n") // \n yazılarını gerçek alt satıra çevir (Regex /g önemli)
+        .replace(/^"|"$/g, ""); // Baştaki ve sondaki tırnakları sil
     } catch (error) {
       return htmlContent;
     }
   };
 
   const cleanHtml = getCleanHtml();
+
+  useEffect(() => {
+    // Sayfadaki tüm kod bloklarını tara ve boya
+    hljs.highlightAll();
+  }, [cleanHtml]);
 
   return (
     <article className="max-w-5xl mx-auto px-6 mt-4 overflow-visible">
@@ -41,6 +50,79 @@ export default function BlogContent({ htmlContent }: { htmlContent: string }) {
           margin: 1rem 0 !important;
           height: auto !important;
           border-radius: 0.75rem;
+        }
+        /* 6. KOD BLOĞU (CODE BLOCK) DÜZENLEMELERİ - AÇIK TEMA */
+        .custom-blog-render pre {
+          background-color: #f9fafb !important; /* Çok açık gri (slate-50) */
+          color: #1e293b !important; /* Slate-900 yazı */
+          padding: 1.25rem !important;
+          border-radius: 0.5rem !important;
+          margin: 1.5rem 0 !important;
+          overflow-x: auto !important;
+          font-family: "Fira Code", "Menlo", "Monaco", monospace !important;
+          font-size: 0.875rem !important;
+          line-height: 1.7 !important;
+          border: 1px solid #e2e8f0 !important; /* İnce açık gri çerçeve */
+          position: relative;
+        }
+
+        /* Boşlukları ve alt satırları koruması için kritik */
+        .custom-blog-render pre code {
+          background: transparent !important;
+          padding: 0 !important;
+          color: inherit !important;
+          font-family: inherit !important;
+          white-space: pre !important;
+          display: block !important;
+          word-spacing: normal !important;
+          word-break: normal !important;
+        }
+
+        /* HLJS Renklerini AÇIK TEMA için optimize et */
+        .custom-blog-render .hljs-keyword {
+          color: #d73a49 !important;
+          font-weight: 600;
+        } /* Kırmızımsı */
+        .custom-blog-render .hljs-string {
+          color: #032f62 !important;
+        } /* Koyu Mavi */
+        .custom-blog-render .hljs-title {
+          color: #6f42c1 !important;
+        } /* Mor */
+        .custom-blog-render .hljs-comment {
+          color: #6a737d !important;
+          font-style: italic;
+        } /* Gri Yorum */
+        .custom-blog-render .hljs-number {
+          color: #005cc5 !important;
+        } /* Mavi Sayı */
+        .custom-blog-render .hljs-attr {
+          color: #22863a !important;
+        } /* Yeşil Özellik */
+
+        /* Dil Etiketini (Sağ Üst) Gizle veya Çok Silik Yap */
+        .custom-blog-render pre::before {
+          content: attr(data-language);
+          position: absolute;
+          top: 0;
+          right: 1rem;
+          font-size: 0.65rem;
+          color: #94a3b8;
+          text-transform: uppercase;
+          background: #f1f5f9;
+          padding: 0px 6px;
+          border-radius: 0 0 4px 4px;
+        }
+
+        /* 7. ALINTI (BLOCKQUOTE) - MEDIUM TARZI */
+        .custom-blog-render blockquote {
+          border-left: 4px solid #f92743 !important; /* Link renginle uyumlu */
+          background-color: #f8fafc !important;
+          padding: 1rem 1.5rem !important;
+          margin: 1.5rem 0 !important;
+          font-style: italic !important;
+          color: #475569 !important;
+          font-size: 1.1rem !important;
         }
 
         /* 3. TABLET VE MASAÜSTÜ (Geniş ekranlarda gazete düzeni) */
