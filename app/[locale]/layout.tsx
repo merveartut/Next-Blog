@@ -1,3 +1,4 @@
+///home/merve/Next-Blog/app/[locale]/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/app/globals.css";

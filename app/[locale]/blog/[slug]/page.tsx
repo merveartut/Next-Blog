@@ -48,7 +48,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
           <div className="flex flex-row justify-between items-center gap-6 mb-8 md:mb-12">
             <Link
               href="/"
-              className="no-underline w-full justify-start text-xs md:text-sm font-bold text-[#f92743] hover:text-[#f92743] transition-colors flex items-center gap-2"
+              className="no-underline justify-start text-xs md:text-sm border-[1px] p-2 rounded-2xl font-bold text-[#f92743] hover:text-[#f92743] transition-colors flex items-center gap-2"
             >
               <span className="text-lg md:text-xl">←</span> {t("allPosts")}
             </Link>

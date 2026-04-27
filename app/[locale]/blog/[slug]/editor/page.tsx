@@ -9,7 +9,10 @@ import { savePost } from "../../actions";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { LoadingContext } from "@/components/LoadingProvider";
-import Editor from "@/components/Editor";
+const TiptapEditor = dynamic(() => import("@/components/TiptapEditor"), {
+  ssr: false,
+});
+import dynamic from "next/dynamic";
 
 export default function BlogEditorPage() {
   const chipColors = [
@@ -96,7 +99,14 @@ export default function BlogEditorPage() {
     title: "",
     category: "Code",
     imageUrl: "",
-    content: "",
+    content: JSON.stringify({
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+        },
+      ],
+    }),
     author: "Admin User",
   });
 
@@ -128,6 +138,24 @@ export default function BlogEditorPage() {
       setLoading(false);
     }
   };
+  const getEditorContent = () => {
+    if (!formData.content) {
+      return {
+        type: "doc",
+        content: [{ type: "paragraph" }],
+      };
+    }
+
+    try {
+      return JSON.parse(formData.content);
+    } catch {
+      return {
+        type: "doc",
+        content: [{ type: "paragraph" }],
+      };
+    }
+  };
+
   if (isInitialLoading) return null;
 
   // 2. ANA EDİTÖR EKRANI
@@ -156,7 +184,10 @@ export default function BlogEditorPage() {
             placeholder={t("addTitle")}
             value={formData.title}
             onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
+              setFormData((prev) => ({
+                ...prev,
+                title: e.target.value,
+              }))
             }
           />
 
@@ -189,10 +220,13 @@ export default function BlogEditorPage() {
             />
           </div>
 
-          <Editor
-            data={formData.content ? JSON.parse(formData.content) : {}}
+          <TiptapEditor
+            data={getEditorContent()}
             onChange={(val) =>
-              setFormData({ ...formData, content: JSON.stringify(val) })
+              setFormData((prev) => ({
+                ...prev,
+                content: JSON.stringify(val),
+              }))
             }
           />
           <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-4xl bg-transparent text-white p-2 rounded-2xl flex items-center justify-center z-50">

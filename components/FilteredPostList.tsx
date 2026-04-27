@@ -4,8 +4,6 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import FavoriteButton from "./FavoriteButton";
-import { useContext } from "react";
-import { LoadingContext } from "./LoadingProvider";
 import { useTranslations } from "next-intl";
 import { sendGAEvent } from "@next/third-parties/google";
 
@@ -18,37 +16,89 @@ export default function FilteredPostList({
 }) {
   const searchParams = useSearchParams();
   const search = searchParams.get("search")?.toLowerCase() || "";
-
   const t = useTranslations();
+
+  const getRawText = (content: string) => {
+    if (!content) return "";
+    let trimmed = content.trim();
+
+    if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+      trimmed = trimmed.substring(1, trimmed.length - 1).replace(/\\"/g, '"');
+    }
+
+    if (trimmed.startsWith("<")) {
+      return trimmed
+        .replace(/\\"/g, '"')
+        .replace(/\\n/g, " ")
+        .replace(/<[^>]*>?/gm, " ")
+        .replace(/&nbsp;/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    try {
+      const doc = typeof trimmed === "string" ? JSON.parse(trimmed) : trimmed;
+      let segments: string[] = [];
+      const walk = (node: any) => {
+        if (!node) return;
+        if (node.type === "text") segments.push(node.text);
+        if (node.content && Array.isArray(node.content)) {
+          node.content.forEach(walk);
+        }
+        if (["paragraph", "heading", "listItem"].includes(node.type))
+          segments.push(" ");
+      };
+      walk(doc);
+      return segments.join("").replace(/\s+/g, " ").trim();
+    } catch (e) {
+      return trimmed
+        .replace(/[{}":\[\]]/g, " ")
+        .replace(/\\n/g, " ")
+        .replace(/type|doc|content|paragraph|text|attrs|src|imageResize/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+  };
 
   const filteredPosts = initialPosts.filter((post) => {
     const title = post.title.toLowerCase();
     const author = post.author.toLowerCase();
-    const content = post.content.replace(/<[^>]*>?/gm, " ").toLowerCase();
+    const rawContent = getRawText(post.content).toLowerCase();
     return (
       title.includes(search) ||
       author.includes(search) ||
-      content.includes(search)
+      rawContent.includes(search)
     );
   });
 
-  const stripHtml = (html: string) => {
-    if (!html) return "";
-    return html
-      .replace(/\\"/g, '"') // Kaçışlı tırnakları (\") temizle
-      .replace(/\\n/g, " ") // Satır sonlarını boşluğa çevir
-      .replace(/<[^>]*>?/gm, " ") // HTML etiketlerini temizle
-      .replace(/&nbsp;/g, " ") // HTML boşluk karakterlerini temizle
-      .replace(/\s+/g, " ") // Fazla boşlukları tek boşluğa indir
-      .trim();
-  };
-
-  const getFirstImage = (html: string) => {
-    if (!html) return null;
-    const cleanHtml = html.replace(/&quot;/g, '"').replace(/\\"/g, '"');
-    const match = cleanHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
-    if (!match) return null;
-    return match[1].replace(/^[\\"]+|[\\"]+$/g, "").trim();
+  const getFirstImage = (content: string) => {
+    if (!content || typeof content !== "string") return null;
+    const trimmed = content.trim();
+    if (trimmed.startsWith("<") || trimmed.includes("<img")) {
+      const cleanHtml = trimmed.replace(/\\"/g, '"').replace(/\\n/g, "");
+      const match = cleanHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
+      return match ? match[1] : null;
+    }
+    try {
+      const doc = JSON.parse(trimmed);
+      let src = null;
+      const find = (node: any) => {
+        if (src) return;
+        if (
+          (node.type === "image" || node.type === "imageResize") &&
+          node.attrs?.src
+        ) {
+          src = node.attrs.src;
+          return;
+        }
+        if (node.content) node.content.forEach(find);
+      };
+      find(doc);
+      return src;
+    } catch {
+      const match = trimmed.match(/src=["']([^"']+)["']/i);
+      return match ? match[1] : null;
+    }
   };
 
   return (
@@ -57,17 +107,15 @@ export default function FilteredPostList({
         filteredPosts.map((post, index) => {
           const isNoSearch = search === "";
           const isFeatured = isNoSearch && index === 0;
-
           const firstImageInContent = getFirstImage(post.content);
 
-          // DEĞİŞİKLİK: Placeholder'ı sildik, sadece gerçek görsel varsa displayImage dolacak
           let displayImage =
             post.imageUrl && post.imageUrl.trim() !== ""
               ? post.imageUrl
               : firstImageInContent;
 
           if (displayImage) {
-            displayImage = displayImage.replace(/[\\"]/g, "").trim();
+            displayImage = displayImage.toString().replace(/[\\"]/g, "").trim();
             if (
               !displayImage.startsWith("http") &&
               !displayImage.startsWith("/")
@@ -76,42 +124,34 @@ export default function FilteredPostList({
             }
           }
 
+          const excerpt = getRawText(post.content);
+
           return (
             <Link
               key={post.slug}
-              prefetch={true}
               href={`/${locale}/blog/${post.slug}`}
-              onClick={() => {
-                sendGAEvent("event", "post_card_clicked", {
-                  event_category: "engagement",
-                  event_label: post.title, // Hangi yazının tıklandığını görmek için başlığı gönderiyoruz
-                  value: post.slug,
-                });
-              }}
               className={`group flex bg-white/40 rounded-2xl border border-slate-200/50 hover:shadow-xl transition-all duration-500
-      ${isFeatured ? "md:col-span-2 flex-col md:flex-row" : "flex-col w-full"}
-    `}
+                ${isFeatured ? "md:col-span-2 flex-col md:flex-row" : "flex-col w-full"}
+              `}
             >
-              {/* Image Section */}
+              {/* IMAGE SECTION: Sadece görsel varsa render edilir */}
               {displayImage && (
                 <div
-                  className={`relative overflow-hidden bg-slate-50 
-                ${isFeatured ? "w-full md:w-1/2 aspect-video md:aspect-auto" : "w-full aspect-video"}`}
+                  className={`relative overflow-hidden ${isFeatured ? "w-full md:w-1/2 aspect-video md:aspect-auto" : "w-full aspect-video"}`}
                 >
                   <Image
                     src={displayImage}
                     alt={post.title}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className={`object-cover transition-transform ${isFeatured ? "rounded-l-2xl" : "rounded-t-2xl"} duration-500 group-hover:scale-105`}
                     priority={isFeatured}
                   />
                 </div>
               )}
 
-              {/* Content Section */}
+              {/* CONTENT SECTION */}
               <div
-                className={`p-3 flex flex-col grow justify-between 
-                  ${isFeatured ? (displayImage ? "md:w-1/2 md:p-5" : "w-full md:p-8") : "w-full"}`}
+                className={`p-5 flex flex-col grow justify-between ${isFeatured && displayImage ? "md:w-1/2" : "w-full"}`}
               >
                 <div>
                   <div className="flex items-center gap-2 mb-1">
@@ -125,36 +165,23 @@ export default function FilteredPostList({
                     ))}
                   </div>
 
-                  <div className="relative group/title">
-                    <h2
-                      className={`font-sans font-extrabold text-slate-900 group-hover:text-[#f92743] transition-colors leading-[1.1] tracking-tighter
-      ${isFeatured ? "text-3xl md:text-4xl line-clamp-2 mb-4 italic" : "text-lg md:text-xl mb-1 line-clamp-2"}
-    `}
-                    >
-                      {post.title}
-                    </h2>
+                  <h2
+                    className={`font-sans font-extrabold text-slate-900 group-hover:text-[#f92743] transition-colors leading-[1.1] tracking-tighter mb-2 ${isFeatured ? "text-3xl md:text-4xl italic" : "text-lg md:text-xl line-clamp-2"}`}
+                  >
+                    {post.title}
+                  </h2>
 
-                    {/* Tooltip: Artık h2'nin dışında ama aynı grup içinde */}
-                    <span className="invisible opacity-0 group-hover/title:visible group-hover/title:opacity-100 pointer-events-none absolute left-0 -top-2 -translate-y-full w-max max-w-[280px] transition-all duration-200 rounded-lg bg-slate-900 px-3 py-2 text-[12px] font-bold text-white shadow-2xl z-[9999] leading-normal whitespace-normal break-words after:content-[''] after:absolute after:top-full after:left-4 after:border-8 after:border-transparent after:border-t-slate-900">
-                      {post.title}
-                    </span>
-                  </div>
-
+                  {/* EXCERPT: Görsel olsa da olmasa da başlığın altında görünür (Featured kartta veya görsel yoksa) */}
                   {(isFeatured || !displayImage) && (
                     <p
-                      className={`text-slate-500 text-[13px] leading-relaxed mb-4
-        ${
-          isFeatured
-            ? "line-clamp-6 md:line-clamp-4" // Featured için uzun özet
-            : "line-clamp-6" // Görseli olmayan küçük kartlar için orta uzunlukta özet
-        }`}
+                      className={`text-slate-500 text-[13px] leading-relaxed mb-4 ${isFeatured ? "line-clamp-4 md:line-clamp-6" : "line-clamp-6"}`}
                     >
-                      {stripHtml(post.content)}
+                      {excerpt}
                     </p>
                   )}
                 </div>
 
-                <div className="flex justify-between items-center pt-2 mt-1 border-t border-slate-50">
+                <div className="flex justify-between items-center pt-2 mt-auto border-t border-slate-100">
                   <div className="flex flex-col">
                     <span className="text-[12px] font-bold text-slate-800">
                       {post.author}
@@ -162,11 +189,7 @@ export default function FilteredPostList({
                     <time className="text-[11px] text-slate-400 uppercase tracking-tighter">
                       {new Intl.DateTimeFormat(
                         locale === "tr" ? "tr-TR" : "en-US",
-                        {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        },
+                        { day: "2-digit", month: "short", year: "numeric" },
                       ).format(new Date(post.createdAt))}
                     </time>
                   </div>

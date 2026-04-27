@@ -6,6 +6,7 @@ import Image from "next/image";
 import DeleteButton from "@/components/DeleteButton";
 import { PenSquare } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import FavoriteButton from "@/components/FavoriteButton";
 
 interface PageProps {
   params: { locale: string };
@@ -21,13 +22,11 @@ export default async function ProfilePage({ params }: PageProps) {
     select: { name: true, email: true },
   });
 
-  if (!dbUser) {
-    return redirect("/login");
-  }
-  const { locale } = await params;
+  if (!dbUser) return redirect("/login");
 
+  const { locale } = await params;
   const t = await getTranslations({ locale });
-  // Veritabanından sadece bu kullanıcıya ait postları getir
+
   const userPosts = await prisma.post.findMany({
     where: {
       author: {
@@ -38,27 +37,84 @@ export default async function ProfilePage({ params }: PageProps) {
     orderBy: { createdAt: "desc" },
   });
 
-  const getFirstImage = (html: string) => {
-    if (!html) return null;
+  // YENİ: Tiptap JSON ve HTML destekli metin ayıklama (Server-side)
+  const getRawText = (content: string) => {
+    if (!content) return "";
+    let trimmed = content.trim();
 
-    // 1. Önce ters eğik çizgileri ve tırnakları normalize edelim
-    const cleanHtml = html.split('\\"').join('"');
+    if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+      trimmed = trimmed.substring(1, trimmed.length - 1).replace(/\\"/g, '"');
+    }
 
-    // 2. Çok daha esnek bir Regex
-    const match = cleanHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
+    if (trimmed.startsWith("<")) {
+      return trimmed
+        .replace(/\\"/g, '"')
+        .replace(/\\n/g, " ")
+        .replace(/<[^>]*>?/gm, " ")
+        .replace(/&nbsp;/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
 
-    if (!match) return null;
+    try {
+      const doc = JSON.parse(trimmed);
+      let segments: string[] = [];
+      const walk = (node: any) => {
+        if (!node) return;
+        if (node.type === "text") segments.push(node.text);
+        if (node.content && Array.isArray(node.content)) {
+          node.content.forEach(walk);
+        }
+        if (["paragraph", "heading", "listItem"].includes(node.type))
+          segments.push(" ");
+      };
+      walk(doc);
+      return segments.join("").replace(/\s+/g, " ").trim();
+    } catch (e) {
+      return trimmed
+        .replace(/[{}":\[\]]/g, " ")
+        .replace(/\\n/g, " ")
+        .replace(/type|doc|content|paragraph|text|attrs|src|imageResize/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+  };
 
-    let src = match[1];
-
-    // 3. Baştaki ve sondaki kaçış kalıntılarını temizle
-    return src.replace(/^[\\"]+|[\\"]+$/g, "").trim();
+  // YENİ: Tiptap JSON ve HTML destekli görsel ayıklama (Server-side)
+  const getFirstImage = (content: string) => {
+    if (!content || typeof content !== "string") return null;
+    const trimmed = content.trim();
+    if (trimmed.startsWith("<") || trimmed.includes("<img")) {
+      const cleanHtml = trimmed.replace(/\\"/g, '"').replace(/\\n/g, "");
+      const match = cleanHtml.match(/<img[^>]+src=["']([^"']+)["']/i);
+      return match ? match[1] : null;
+    }
+    try {
+      const doc = JSON.parse(trimmed);
+      let src = null;
+      const find = (node: any) => {
+        if (src) return;
+        if (
+          (node.type === "image" || node.type === "imageResize") &&
+          node.attrs?.src
+        ) {
+          src = node.attrs.src;
+          return;
+        }
+        if (node.content) node.content.forEach(find);
+      };
+      find(doc);
+      return src;
+    } catch {
+      const match = trimmed.match(/src=["']([^"']+)["']/i);
+      return match ? match[1] : null;
+    }
   };
 
   return (
     <main className="min-h-[calc(100vh-90px)] bg-[#f5f3ea] py-6 md:py-12 px-2 md:px-6">
       <div className="max-w-6xl mx-auto">
-        {/* HEADER - Mobilde daha az padding */}
+        {/* HEADER */}
         <header className="flex flex-col md:flex-row items-center gap-4 md:gap-6 mb-8 md:mb-12 bg-white/40 border border-slate-200 p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-sm text-center md:text-left mx-2 md:mx-0">
           <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-slate-900 flex items-center justify-center text-2xl md:text-3xl text-white font-black shrink-0">
             {dbUser?.name?.charAt(0)}
@@ -78,83 +134,89 @@ export default async function ProfilePage({ params }: PageProps) {
         </header>
 
         <h2 className="text-lg md:text-xl font-black mb-6 md:mb-8 text-slate-900 uppercase tracking-tighter italic px-2 md:px-0">
-          {t("myPosts") || "Yazılarım"}
+          {t("myPosts")}
         </h2>
 
-        {/* POST GRID: Mobilde 2 sütun (grid-cols-2), tablette 2, masaüstünde 3 */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 px-2 md:px-0">
+        {/* POST GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-2 md:px-0">
           {userPosts.map((post) => {
             const firstImageInContent = getFirstImage(post.content);
-            const displayImage = post.imageUrl || firstImageInContent;
+            let displayImage = post.imageUrl || firstImageInContent;
+
+            if (displayImage) {
+              displayImage = displayImage
+                .toString()
+                .replace(/[\\"]/g, "")
+                .trim();
+              if (
+                !displayImage.startsWith("http") &&
+                !displayImage.startsWith("/")
+              ) {
+                displayImage = `/${displayImage}`;
+              }
+            }
+
+            const excerpt = getRawText(post.content);
 
             return (
               <div
                 key={post.id}
-                className="group relative flex flex-col bg-white/40 rounded-xl md:rounded-2xl border border-slate-200/50 hover:shadow-xl transition-all duration-500 overflow-hidden"
+                className="group flex flex-col bg-white/40 rounded-2xl border border-slate-200/50 hover:shadow-xl transition-all duration-500 overflow-hidden"
               >
-                {/* Image Section - Oranlar korundu */}
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="relative aspect-video overflow-hidden bg-slate-100"
-                >
-                  {displayImage ? (
+                {/* IMAGE SECTION */}
+                {displayImage && (
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="relative aspect-video overflow-hidden bg-slate-100"
+                  >
                     <Image
                       src={displayImage}
                       alt={post.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-slate-50 text-slate-300">
-                      <PenSquare
-                        className="w-6 h-6 md:w-10 md:h-10"
-                        strokeWidth={1}
-                      />
-                    </div>
-                  )}
-                </Link>
-
-                {/* Content Section - Mobilde daha küçük boşluklar */}
-                <div className="p-2.5 md:p-4 flex flex-col grow">
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="block mb-2 md:mb-3"
-                  >
-                    <h3 className="font-sans font-extrabold text-slate-900 group-hover:text-[#f92743] transition-colors leading-[1.2] tracking-tighter text-sm md:text-lg line-clamp-2 italic">
-                      {post.title}
-                    </h3>
                   </Link>
+                )}
 
-                  <div className="flex justify-between items-center mt-auto pt-2 md:pt-4 border-t border-slate-100">
+                {/* CONTENT SECTION */}
+                <div className="p-5 flex flex-col grow justify-between">
+                  <div>
+                    <Link href={`/blog/${post.slug}`} className="block mb-2">
+                      <h3 className="font-sans font-extrabold text-slate-900 group-hover:text-[#f92743] transition-colors leading-[1.1] tracking-tighter text-lg md:text-xl line-clamp-2 italic">
+                        {post.title}
+                      </h3>
+                    </Link>
+
+                    {/* EXCERPT: Görsel yoksa veya Featured (bu gridde hepsi benzer) görünümü için */}
+                    {!displayImage && (
+                      <p className="text-slate-500 text-[13px] leading-relaxed mb-4 line-clamp-6">
+                        {excerpt}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex justify-between items-center pt-4 mt-auto border-t border-slate-100">
                     <div className="flex flex-col">
-                      <time className="text-[9px] md:text-[11px] text-slate-400 font-bold uppercase tracking-tighter">
+                      <time className="text-[11px] text-slate-400 font-bold uppercase tracking-tighter">
                         {new Intl.DateTimeFormat(
                           locale === "tr" ? "tr-TR" : "en-US",
                           {
                             day: "2-digit",
                             month: "short",
+                            year: "numeric",
                           },
                         ).format(new Date(post.createdAt))}
                       </time>
                     </div>
 
-                    {/* Aksiyon Butonları: Mobilde ikonlar biraz daha küçük */}
-                    <div className="flex items-center gap-1 md:gap-2">
+                    <div className="flex items-center gap-2">
                       <Link
                         href={`/blog/${post.slug}/editor`}
                         className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all"
-                        title="Düzenle"
                       >
-                        <PenSquare
-                          size={14}
-                          className="md:w-[18px] md:h-[18px]"
-                        />
+                        <PenSquare size={18} />
                       </Link>
-                      <div className="hover:bg-red-50 rounded-full">
-                        {/* DeleteButton içindeki ikon boyutu CSS ile override edilebilir 
-                        veya DeleteButton'a size prop'u eklenebilir */}
-                        <DeleteButton postId={post.id} />
-                      </div>
+                      <DeleteButton postId={post.id} />
                     </div>
                   </div>
                 </div>
@@ -164,7 +226,7 @@ export default async function ProfilePage({ params }: PageProps) {
 
           {userPosts.length === 0 && (
             <div className="col-span-full py-20 text-center font-mono text-slate-400 italic text-sm">
-              You haven't written anything yet.
+              {t("noMatches")}
             </div>
           )}
         </div>
