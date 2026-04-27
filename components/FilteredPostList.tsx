@@ -81,9 +81,14 @@ export default function FilteredPostList({
     }
     try {
       const doc = JSON.parse(trimmed);
-      let src = null;
+      // src'nin tipini açıkça belirtiyoruz
+      let src: string | null = null;
+
       const find = (node: any) => {
+        // Eğer görsel bulunduysa diğer dalları gezmeyi bırak
         if (src) return;
+
+        // Tiptap image veya imageResize tipindeki node'u yakala
         if (
           (node.type === "image" || node.type === "imageResize") &&
           node.attrs?.src
@@ -91,8 +96,13 @@ export default function FilteredPostList({
           src = node.attrs.src;
           return;
         }
-        if (node.content) node.content.forEach(find);
+
+        // Alt içerik varsa (content dizisi) recursive olarak gezmeye devam et
+        if (node.content && Array.isArray(node.content)) {
+          node.content.forEach(find);
+        }
       };
+
       find(doc);
       return src;
     } catch {
