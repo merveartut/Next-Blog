@@ -168,7 +168,7 @@ export default function TiptapEditor({ data, onChange }: EditorProps) {
             src: result.file.url,
             float: "center",
             width: 70,
-          })
+          } as any)
           .run();
       } catch (e) {
         console.error(e);
