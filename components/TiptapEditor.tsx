@@ -448,9 +448,15 @@ export default function TiptapEditor({ data, onChange }: EditorProps) {
           .tiptap p::after {
             content: "";
             display: block;
-            clear: both;
           }
 
+          .tiptap p:empty::before,
+          .tiptap p br::before {
+            content: "";
+            display: inline-block;
+            height: 1.2em; /* Bir satır boyutu kadar boşluk */
+            vertical-align: middle;
+          }
           .hljs-keyword {
             color: #ff7b72;
           }
@@ -463,18 +469,30 @@ export default function TiptapEditor({ data, onChange }: EditorProps) {
             color: #8b949e;
           }
 
-          .tiptap ul {
-            list-style: disc;
-            padding-left: 1.5rem;
-          }
-
+          /* Listelerin görsel etrafında düzgün akması için */
+          .tiptap ul,
           .tiptap ol {
-            list-style: decimal;
-            padding-left: 1.5rem;
+            padding-left: 0;
+            list-style-position: inside; /* Noktaların görsel altında kalmasını önler */
           }
 
           .tiptap li {
             margin: 0.35rem 0;
+          }
+
+          /* Seçili resim efekti */
+          .tiptap img.ProseMirror-selectednode {
+            outline: 3px solid #3b82f6;
+          }
+
+          /* Kod bloklarının kaymasını önle */
+          .tiptap pre {
+            clear: both; /* Kod blokları her zaman yeni satıra geçmeli */
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
           }
 
           .tiptap h1 {
@@ -509,21 +527,22 @@ export default function TiptapEditor({ data, onChange }: EditorProps) {
           .tiptap img[data-float="left"] {
             float: left;
             width: 38%;
-            margin: 0 1.5rem 1rem 0;
+            margin: 0.5rem 1.5rem 0.5rem 0;
             shape-outside: margin-box;
           }
 
           .tiptap img[data-float="right"] {
             float: right;
             width: 38%;
-            margin: 0 0 1rem 1.5rem;
+            margin: 0.5rem 0 0.5rem 1.5rem;
             shape-outside: margin-box;
           }
 
           .tiptap img[data-float="center"] {
             display: block;
-            margin: 1.5rem auto;
+            margin: 2rem auto;
             float: none;
+            width: 100%;
           }
 
           .tiptap p {
@@ -533,7 +552,6 @@ export default function TiptapEditor({ data, onChange }: EditorProps) {
 
           .tiptap p::after {
             content: "";
-            display: block;
             clear: both;
           }
 
